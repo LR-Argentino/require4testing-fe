@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {AuthService} from '../../services/auth-service';
 import {Navbar} from '../navbar/navbar';
 
 @Component({
@@ -12,11 +11,7 @@ import {Navbar} from '../navbar/navbar';
 })
 export class Dashboard {
 
-  constructor(private auth: AuthService) {
+  constructor() {
   }
 
-
-  logout(): void {
-    this.auth.logout();
-  }
 }
