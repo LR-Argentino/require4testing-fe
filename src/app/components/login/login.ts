@@ -2,7 +2,7 @@ import {Component, inject, signal, WritableSignal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../services/auth-service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LoginUser} from '../../models/LoginUser';
+import {LoginUser} from '../../models/login-user';
 
 @Component({
   selector: 'app-login',

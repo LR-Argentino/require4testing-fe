@@ -1,0 +1,177 @@
+<app-navbar></app-navbar>
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">New Requirement</h1>
+      <p class="mt-2 text-sm text-gray-600">Create a new requirement for your project</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+      <form [formGroup]="requirementForm" (ngSubmit)="onSubmit()" class="px-4 py-6 sm:p-8">
+        <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+          <!-- Title -->
+          <div class="sm:col-span-6">
+            <label for="title" class="block text-sm font-medium leading-6 text-gray-900">
+              Title <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-2">
+              <input
+                type="text"
+                id="title"
+                formControlName="title"
+                placeholder="Requirement title"
+                class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-colors duration-200"
+                [class.ring-red-500]="requirementForm.get('title')?.invalid && requirementForm.get('title')?.touched"
+              />
+              @if (requirementForm.get('title')?.invalid && requirementForm.get('title')?.touched) {
+                <div
+                  class="mt-1 text-sm text-red-600">
+                  Title is required and must be at least 3 characters long
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="sm:col-span-6">
+            <label for="description" class="block text-sm font-medium leading-6 text-gray-900">
+              Description
+            </label>
+            <div class="mt-2">
+                  <textarea
+                    id="description"
+                    formControlName="description"
+                    rows="4"
+                    placeholder="Requirement description"
+                    class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-colors duration-200 resize-none"
+                    [class.ring-red-500]="requirementForm.get('description')?.invalid && requirementForm.get('description')?.touched"
+                  ></textarea>
+            </div>
+          </div>
+
+          <!-- Priority -->
+          <div class="sm:col-span-2">
+            <label for="priority" class="block text-sm font-medium leading-6 text-gray-900">
+              Priority <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-2">
+              <select
+                id="priority"
+                formControlName="priority"
+                class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-colors duration-200"
+                [class.ring-red-500]="requirementForm.get('priority')?.invalid && requirementForm.get('priority')?.touched"
+              >
+                <option value="">Select priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+              <div *ngIf="requirementForm.get('priority')?.invalid && requirementForm.get('priority')?.touched"
+                   class="mt-1 text-sm text-red-600">
+                Priority is required
+              </div>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="sm:col-span-2">
+            <label for="status" class="block text-sm font-medium leading-6 text-gray-900">
+              Status <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-2">
+              <select
+                id="status"
+                formControlName="status"
+                class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-colors duration-200"
+                [class.ring-red-500]="requirementForm.get('status')?.invalid && requirementForm.get('status')?.touched"
+              >
+                <option value="">Select status</option>
+                <option value="draft">Draft</option>
+                <option value="review">In Review</option>
+                <option value="approved">Approved</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+              <div *ngIf="requirementForm.get('status')?.invalid && requirementForm.get('status')?.touched"
+                   class="mt-1 text-sm text-red-600">
+                Status is required
+              </div>
+            </div>
+          </div>
+
+          <!-- Assignee -->
+          <div class="sm:col-span-2">
+            <label for="assignee" class="block text-sm font-medium leading-6 text-gray-900">
+              Assignee
+            </label>
+            <div class="mt-2">
+              <select
+                id="assignee"
+                formControlName="assignee"
+                class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-colors duration-200"
+              >
+                <option value="">Select assignee</option>
+                <option value="john-doe">John Doe</option>
+                <option value="jane-smith">Jane Smith</option>
+                <option value="mike-johnson">Mike Johnson</option>
+                <option value="sarah-wilson">Sarah Wilson</option>
+                <option value="unassigned">Unassigned</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex items-center justify-end gap-x-6">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700 transition-colors duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="requirementForm.invalid || isLoading()"
+            class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2"
+          >
+            @if (isLoading()) {
+              <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating...
+            } @else {
+              Create Requirement
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Success Message -->
+    @if (showSuccessMessage()) {
+      <div class="mt-4 rounded-md bg-green-50 p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.236 4.53L7.53 10.47a.75.75 0 00-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-green-800">
+              Requirement created successfully!
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
