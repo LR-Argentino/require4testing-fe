@@ -35,6 +35,8 @@ export class AuthenticationService {
 
       if (isAuthenticated && token) {
         localStorage.setItem('auth_token', token);
+        localStorage.setItem('roles', this.user()!.role)
+        localStorage.setItem('username', this.user()!.username);
       } else {
         localStorage.removeItem('auth_token');
       }
@@ -65,7 +67,7 @@ export class AuthenticationService {
 
         this._user.set(user);
         this._token.set(response.token);
-        
+
         // TODO: Navigate to the main page or dashboard after successful login
         this.router.navigate((['/'])).then((response) => {
           if (!response) {
@@ -111,10 +113,19 @@ export class AuthenticationService {
 
   private loadTokenFromStorage(): void {
     const token = localStorage.getItem('auth_token');
-    if (token) {
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('roles');
+    
+    if (token && username && role) {
       this._token.set(token);
+      this._user.set({
+        username: username,
+        email: '',
+        role: role
+      });
     } else {
       this._token.set(null);
+      this._user.set(null);
     }
   }
 }
