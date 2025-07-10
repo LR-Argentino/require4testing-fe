@@ -18,12 +18,12 @@ export class AuthenticationService {
   private readonly _error: WritableSignal<string | null> = signal<string | null>(null);
 
   public readonly token: Signal<string | null> = this._token.asReadonly();
-  public readonly user: WritableSignal<User | null> = signal<User | null>(null);
+  public readonly user: Signal<User | null> = this._user.asReadonly();
   public readonly isLoading: Signal<boolean> = this._isLoading.asReadonly();
   public readonly error: Signal<string | null> = this._error.asReadonly();
 
   public readonly isAuthenticated = computed(() => {
-    return this.token() !== null && this.user() != null;
+    return this.token() !== null && this.user() !== null;
   })
 
   constructor() {
@@ -65,7 +65,7 @@ export class AuthenticationService {
 
         this._user.set(user);
         this._token.set(response.token);
-
+        
         // TODO: Navigate to the main page or dashboard after successful login
         this.router.navigate((['/'])).then((response) => {
           if (!response) {

@@ -31,8 +31,6 @@ export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     }
   })
 
-  console.log(`Add Authorization header: ${authReq.headers.get('Authorization')}`);
-
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
