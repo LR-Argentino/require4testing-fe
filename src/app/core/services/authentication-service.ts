@@ -3,13 +3,15 @@ import {HttpClient} from '@angular/common/http';
 import {LoginRequest} from '../../../shared/models/login-request';
 import {LoginResponse} from '../../../shared/models/login-response';
 import {User} from '../../../shared/models/user';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   private readonly httpClient = inject(HttpClient);
-  
+  private readonly router = inject(Router);
+
   private readonly _token: WritableSignal<string | null> = signal<string | null>(null);
   private readonly _user: WritableSignal<User | null> = signal<User | null>(null);
   private readonly _isLoading: WritableSignal<boolean> = signal<boolean>(false);
@@ -65,6 +67,12 @@ export class AuthenticationService {
         this._token.set(response.token);
 
         // TODO: Navigate to the main page or dashboard after successful login
+        this.router.navigate((['/'])).then((response) => {
+          if (!response) {
+            console.error('Navigation failed after login');
+          }
+          console.log(response);
+        })
         this._isLoading.set(false);
       },
       error: (err) => {
@@ -89,13 +97,16 @@ export class AuthenticationService {
     })
   }
 
-
-  private clearAuthState(): void {
+  public clearAuthState(): void {
     this._token.set(null);
     this._user.set(null);
     this._isLoading.set(false);
     this._error.set(null);
-    // TODO: Route to the login page
+    this.router.navigate(['/login']).then((response) => {
+      if (!response) {
+        console.error('Navigation failed after logout');
+      }
+    });
   }
 
   private loadTokenFromStorage(): void {
