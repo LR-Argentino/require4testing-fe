@@ -1,11 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {AuthenticationService} from './core/services/authentication-service';
+import {Header} from './header/header';
 
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet
+    RouterOutlet,
+    Header
   ],
   standalone: true,
   templateUrl: './app.html',
