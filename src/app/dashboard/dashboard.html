@@ -1,1 +1,33 @@
-<p>dashboard works!</p>
+<main class="p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Page Title -->
+    <h1 class="text-3xl font-bold text-white mb-8">Dashboard</h1>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <app-stats-card
+        title="Total Requirements"
+        value="120"
+      ></app-stats-card>
+
+      <app-stats-card
+        title="Total Test Cases"
+        value="350"
+      ></app-stats-card>
+
+      <app-stats-card
+        title="Active Test Runs"
+        value="15"
+      ></app-stats-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <app-quick-actions></app-quick-actions>
+
+    <!-- Recent Activity -->
+    <!--    <app-recent-activity></app-recent-activity>-->
+
+    <!-- Metrics -->
+    <app-metrics></app-metrics>
+  </div>
+</main>
