@@ -8,7 +8,7 @@ import {QuickAction} from '../../../shared/models/quick-action';
   styleUrl: './quick-actions.css'
 })
 export class QuickActions {
-  actions: QuickAction[] = [
+  protected actions: QuickAction[] = [
     {label: 'New Requirement', primary: true},
     {label: 'New Test Case', primary: false},
     {label: 'New Test Run', primary: true},
