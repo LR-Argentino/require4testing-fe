@@ -1,5 +1,5 @@
 export interface Requirement {
-  id: string;
+  id: number;
   title: string;
   description: string;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';

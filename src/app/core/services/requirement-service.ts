@@ -1,12 +1,15 @@
 import {computed, inject, Injectable, Signal, signal, WritableSignal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Requirement} from '../../../shared/models/requirement';
+import {CreateUpdateRequirementDto} from '../../../shared/models/create-update-requirement-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequirementService {
   private readonly http = inject(HttpClient);
+
+  private readonly REQUIREMENT_URL = 'api/requirements';
 
   private readonly _requirements: WritableSignal<Requirement[]> = signal([]);
   private readonly _isLoading: WritableSignal<boolean> = signal(false);
@@ -55,9 +58,9 @@ export class RequirementService {
   constructor() {
   }
 
-  public fetchRequirements(): void {
+  public getAllRequirements(): void {
     this._isLoading.set(true);
-    this.http.get<Requirement[]>('api/requirements').subscribe({
+    this.http.get<Requirement[]>(this.REQUIREMENT_URL).subscribe({
       next: (response) => {
         console.log(response);
         this._requirements.set(response);
@@ -71,7 +74,62 @@ export class RequirementService {
     })
   }
 
-  public fetchRequirementById(id: number): void {
-    
+  public getRequirementById(id: number): void {
+    this._isLoading.set(true);
+    this.http.get<Requirement>(`${this.REQUIREMENT_URL}/${id}`).subscribe({
+      next: (response: Requirement) => {
+        console.log('Fetched requirement by ID:', response);
+        this._isLoading.set(false);
+      },
+      error: (error: Error) => {
+        console.error('Error fetching requirement by ID:', error);
+        this._isLoading.set(false);
+      }
+    })
+  }
+
+  public createRequirement(requirement: CreateUpdateRequirementDto): void {
+    this._isLoading.set(true);
+    this.http.post<Requirement>(this.REQUIREMENT_URL, requirement).subscribe({
+      next: (response: Requirement) => {
+        console.log('Created requirement:', response);
+        this._requirements.update(reqs => [...reqs, response]);
+        this._isLoading.set(false);
+      },
+      error: (error: Error) => {
+        console.error('Error creating requirement:', error);
+        this._isLoading.set(false);
+      }
+    });
+  }
+
+  public updateRequirement(id: number, newRequirement: CreateUpdateRequirementDto): void {
+    this._isLoading.set(true);
+    this.http.put<Requirement>(`${this.REQUIREMENT_URL}/${id}`, newRequirement).subscribe({
+      next: (response: Requirement) => {
+        console.log('Updated requirement:', response);
+        this._requirements.update(reqs => reqs.map(req => req.id === id ? response : req));
+        this._isLoading.set(false);
+      },
+      error: (error: Error) => {
+        console.error('Error updating requirement:', error);
+        this._isLoading.set(false);
+      }
+    });
+  }
+
+  public deleteRequirement(id: number): void {
+    this._isLoading.set(true);
+    this.http.delete(`${this.REQUIREMENT_URL}/${id}`).subscribe({
+      next: () => {
+        console.log(`Deleted requirement with ID: ${id}`);
+        this._requirements.update(reqs => reqs.filter(req => req.id !== id));
+        this._isLoading.set(false);
+      },
+      error: (error: Error) => {
+        console.error('Error deleting requirement:', error);
+        this._isLoading.set(false);
+      }
+    })
   }
 }

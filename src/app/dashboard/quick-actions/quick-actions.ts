@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {QuickAction} from '../../../shared/models/quick-action';
+import {RequirementService} from '../../core/services/requirement-service';
 
 @Component({
   selector: 'app-quick-actions',
@@ -8,7 +9,13 @@ import {QuickAction} from '../../../shared/models/quick-action';
   styleUrl: './quick-actions.css'
 })
 export class QuickActions {
-  actions: QuickAction[] = [
+  private readonly requirementService = inject(RequirementService);
+
+  ngOnInit(): void {
+    this.requirementService.getAllRequirements();
+  }
+
+  protected actions: QuickAction[] = [
     {label: 'New Requirement', primary: true},
     {label: 'New Test Case', primary: false},
     {label: 'New Test Run', primary: true},
@@ -27,5 +34,7 @@ export class QuickActions {
 
   onActionClick(action: string): void {
     console.log(`Action clicked: ${action}`);
+
+    this.requirementService.deleteRequirement(9);
   }
 }
