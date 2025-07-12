@@ -1,9 +1,7 @@
-import {Component, inject} from '@angular/core';
-import {RouterLink} from "@angular/router";
-import {Requirement} from '../models/requirement';
-import {PriorityLevel} from '../../../shared/enums/priority-level';
-import {StatusLevel} from '../../../shared/enums/status-level';
+import {Component, computed, inject, OnInit, Signal} from '@angular/core';
+import {RouterLink} from '@angular/router';
 import {RequirementService} from '../../core/services/requirement-service';
+import {Requirement} from '../models/requirement';
 
 @Component({
   selector: 'app-requirement-list',
@@ -13,46 +11,25 @@ import {RequirementService} from '../../core/services/requirement-service';
   templateUrl: './requirement-list.html',
   styleUrl: './requirement-list.css'
 })
-export class RequirementList {
+export class RequirementList implements OnInit {
   protected readonly requirementService = inject(RequirementService);
-  requirements: Requirement[] = [
-    {
-      id: 1,
-      title: 'User Authentication',
-      description: 'Implement user login and registration functionality.',
-      priority: PriorityLevel.MEDIUM,
-      status: StatusLevel.OPEN,
-      createdBy: 1,
-      createdAt: '2023-10-01T12:00:00Z',
-      updatedAt: '2023-10-02T12:00:00Z'
-    },
-    {
-      id: 2,
-      title: 'Dashboard Overview',
-      description: 'Create a dashboard to display user statistics.',
-      priority: PriorityLevel.MEDIUM,
-      status: StatusLevel.OPEN,
-      createdBy: 2,
-      createdAt: '2023-10-03T12:00:00Z',
-      updatedAt: '2023-10-04T12:00:00Z'
-    }
-  ];
-  totalRequirements = this.requirements.length;
 
-  constructor() {
+  protected readonly requirements: Signal<Requirement[]> = this.requirementService.requirements;
+  protected readonly totalRequirements: Signal<number> = computed(() => this.requirements().length);
+  protected readonly isLoading: Signal<boolean> = this.requirementService.isLoading;
+  protected readonly error: Signal<string | null> = this.requirementService.error;
+
+  ngOnInit(): void {
+    this.loadRequirements();
   }
 
-  ngOnInit() {
-    this.requirementService.getAllRequirements();
-  }
-
-  viewRequirement(id: number): void {
+  protected viewRequirement(id: number): void {
     console.log(`Viewing requirement with ID: ${id}`);
-    // Hier würdest du zur Requirement-Detail Seite navigieren
+    // TODO: Implement navigation to requirement detail
     // this.router.navigate(['/requirements', id]);
   }
 
-  formatDate(dateString: string): string {
+  protected formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -61,8 +38,8 @@ export class RequirementList {
     });
   }
 
-  getInitials(fullName: string): string {
-    // TODO: Call users api
+  protected getInitials(fullName: string): string {
+    // TODO: Replace with actual user service call
     return fullName
       .split(' ')
       .map(name => name.charAt(0))

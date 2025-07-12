@@ -1,7 +1,7 @@
 import {computed, inject, Injectable, Signal, signal, WritableSignal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Requirement} from '../../requirements/models/requirement';
-import {CreateUpdateRequirementDto} from '../../requirements/models/create-update-requirement-dto';
+import { CreateRequirementDto, UpdateRequirementDto } from '../../requirements/models/create-update-requirement-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +64,6 @@ export class RequirementService {
     this._isLoading.set(true);
     this.http.get<Requirement[]>(this.REQUIREMENT_URL).subscribe({
       next: (response) => {
-        console.log(response);
         this._requirements.set(response);
         this._isLoading.set(false);
       },
@@ -81,7 +80,6 @@ export class RequirementService {
     this._isLoading.set(true);
     this.http.get<Requirement>(`${this.REQUIREMENT_URL}/${id}`).subscribe({
       next: (response: Requirement) => {
-        console.log('Fetched requirement by ID:', response);
         this._isLoading.set(false);
       },
       error: (error: Error) => {
@@ -92,7 +90,7 @@ export class RequirementService {
     })
   }
 
-  public createRequirement(requirement: CreateUpdateRequirementDto): void {
+  public createRequirement(requirement: CreateRequirementDto): void {
     this._isLoading.set(true);
     this.http.post<Requirement>(this.REQUIREMENT_URL, requirement).subscribe({
       next: (response: Requirement) => {
@@ -108,7 +106,7 @@ export class RequirementService {
     });
   }
 
-  public updateRequirement(id: number, newRequirement: CreateUpdateRequirementDto): void {
+  public updateRequirement(id: number, newRequirement: UpdateRequirementDto): void {
     this._isLoading.set(true);
     this.http.put<Requirement>(`${this.REQUIREMENT_URL}/${id}`, newRequirement).subscribe({
       next: (response: Requirement) => {
@@ -127,7 +125,6 @@ export class RequirementService {
     this._isLoading.set(true);
     this.http.delete(`${this.REQUIREMENT_URL}/${id}`).subscribe({
       next: () => {
-        console.log(`Deleted requirement with ID: ${id}`);
         this._requirements.update(reqs => reqs.filter(req => req.id !== id));
         this._isLoading.set(false);
       },

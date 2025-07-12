@@ -1,18 +1,11 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {PriorityLevel} from '../../../shared/enums/priority-level';
-import {StatusLevel} from '../../../shared/enums/status-level';
-import {RequirementService} from '../../core/services/requirement-service';
-
-interface StatusOption {
-  value: StatusLevel;
-  label: string;
-}
-
-interface PriorityOptions {
-  value: PriorityLevel;
-  label: string;
-}
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PriorityLevel } from '../../../shared/enums/priority-level';
+import { StatusLevel } from '../../../shared/enums/status-level';
+import { RequirementService } from '../../core/services/requirement-service';
+import { CreateRequirementDto } from '../models/create-update-requirement-dto';
+import { RequirementFormControls } from '../models/requirement-form';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS, PriorityOption, StatusOption } from '../models/requirement-options';
 
 @Component({
   selector: 'app-new-requirement',
@@ -22,30 +15,26 @@ interface PriorityOptions {
   templateUrl: './new-requirement.html',
   styleUrl: './new-requirement.css'
 })
-export class NewRequirement {
-  private fb = inject(FormBuilder)
-  private requirementService = inject(RequirementService)
-  protected requirementForm: FormGroup<any>;
+export class NewRequirement implements OnInit {
+  private readonly requirementService = inject(RequirementService);
+  private readonly fb = inject(FormBuilder)
+
+  protected requirementForm!: FormGroup<RequirementFormControls>;
   protected isSubmitting = false;
 
-  protected readonly priorityOptions: PriorityOptions[] = [
-    {value: PriorityLevel.LOW, label: 'Low'},
-    {value: PriorityLevel.MEDIUM, label: 'Medium'},
-    {value: PriorityLevel.HIGH, label: 'High'}
-  ]
+  protected readonly priorityOptions: PriorityOption[] = PRIORITY_OPTIONS;
+  protected readonly statusOptions: StatusOption[] = STATUS_OPTIONS;
 
-  protected readonly statusOptions: StatusOption[] = [
-    {value: StatusLevel.OPEN, label: 'Open'},
-    {value: StatusLevel.IN_PROGRESS, label: 'In Progress'},
-    {value: StatusLevel.CLOSED, label: 'Closed'}
-  ]
+  ngOnInit(): void {
+    this.initializeForm();
+  }
 
-  constructor() {
-    this.requirementForm = this.fb.group({
-      title: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      description: new FormControl(''),
-      priority: new FormControl('', [Validators.required]),
-      status: new FormControl('', [Validators.required])
+  private initializeForm(): void {
+    this.requirementForm = this.fb.group<RequirementFormControls>({
+      title: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(3)] }),
+      description: new FormControl('', { nonNullable: true }),
+      priority: new FormControl(PriorityLevel.MEDIUM, { nonNullable: true, validators: [Validators.required] }),
+      status: new FormControl(StatusLevel.OPEN, { nonNullable: true, validators: [Validators.required] })
     });
   }
 
@@ -54,23 +43,43 @@ export class NewRequirement {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  onSubmit(): void {
+  protected onSubmit(): void {
     if (this.requirementForm.valid) {
       this.isSubmitting = true;
-
-      // TODO: call API
-      console.log('Requirement Data:', this.requirementForm.value);
-
+      const formValue = this.requirementForm.value;
+      
+      const requirement: CreateRequirementDto = {
+        title: formValue.title!,
+        description: formValue.description!,
+        priority: formValue.priority!,
+        status: formValue.status!
+      };
+      
+      this.requirementService.createRequirement(requirement);
+      
+      // TODO: Replace with proper notification service and navigation
       setTimeout(() => {
         this.isSubmitting = false;
         alert('Requirement saved successfully!');
-        this.requirementForm.reset();
+        this.resetForm();
       }, 1000);
     } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.requirementForm.controls).forEach(key => {
-        this.requirementForm.get(key)?.markAsTouched();
-      });
+      this.markAllFieldsAsTouched();
     }
+  }
+
+  private resetForm(): void {
+    this.requirementForm.reset({
+      title: '',
+      description: '',
+      priority: PriorityLevel.MEDIUM,
+      status: StatusLevel.OPEN
+    });
+  }
+
+  private markAllFieldsAsTouched(): void {
+    Object.keys(this.requirementForm.controls).forEach(key => {
+      this.requirementForm.get(key)?.markAsTouched();
+    });
   }
 }

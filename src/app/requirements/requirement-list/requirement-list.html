@@ -22,12 +22,12 @@
         </div>
       </div>
 
-      @if (requirementService.isLoading()) {
+      @if (isLoading()) {
         <div class="flex items-center justify-center py-12">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
           <span class="ml-3 text-gray-400">Loading requirements...</span>
         </div>
-      } @else if (requirementService.error()) {
+      } @else if (error()) {
         <div class="text-center py-12">
           <div class="text-red-400 mb-4">
             <svg class="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
             </svg>
           </div>
           <h3 class="text-lg font-medium text-gray-300 mb-2">Error loading requirements</h3>
-          <p class="text-gray-500 mb-4">{{ requirementService.error() }}</p>
+          <p class="text-gray-500 mb-4">{{ error() }}</p>
           <button
             (click)="loadRequirements()"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
@@ -47,7 +47,7 @@
       } @else {
         <!-- Table Body -->
         <div class="divide-y divide-gray-700">
-          @for (requirement of requirementService.requirements(); track requirement; let i = $index) {
+          @for (requirement of requirements(); track requirement; let i = $index) {
             <div
               class="grid grid-cols-4 gap-6 px-6 py-4 hover:bg-gray-750 transition-colors duration-150 cursor-pointer group"
               (click)="viewRequirement(requirement.id)"
@@ -96,7 +96,7 @@
 
 
       <!-- Empty State -->
-      @if (requirements.length === 0) {
+      @if (requirements().length === 0 && !isLoading()) {
         <div
           class="text-center py-12"
         >
@@ -122,7 +122,7 @@
     <!-- Table Footer with Pagination Info -->
     <div class="mt-6 flex justify-between items-center text-gray-400 text-sm">
       <div>
-        Showing {{ requirements.length }} of {{ totalRequirements }} requirements
+        Showing {{ requirements().length }} of {{ totalRequirements() }} requirements
       </div>
       <div class="flex space-x-2">
         <!-- Pagination would go here -->
