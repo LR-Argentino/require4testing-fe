@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {PriorityLevel} from '../../../shared/enums/priority-level';
 import {StatusLevel} from '../../../shared/enums/status-level';
+import {RequirementService} from '../../core/services/requirement-service';
 
 interface StatusOption {
   value: StatusLevel;
@@ -23,6 +24,7 @@ interface PriorityOptions {
 })
 export class NewRequirement {
   private fb = inject(FormBuilder)
+  private requirementService = inject(RequirementService)
   protected requirementForm: FormGroup<any>;
   protected isSubmitting = false;
 

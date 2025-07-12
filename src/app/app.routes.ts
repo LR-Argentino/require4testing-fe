@@ -21,6 +21,30 @@ export const routes: Routes = [
       path: 'requirements',
       loadComponent: () => import('./requirements/requirements').then(m => m.Requirements),
       canActivate: [authGurad],
+      children: [
+        {
+          path: 'new',
+          loadComponent: () => import('./requirements/new-requirement/new-requirement').then(m => m.NewRequirement),
+          data: {
+            meta: {
+              title: 'New Requirement',
+              description: 'Create a new requirement'
+            }
+          }
+        },
+
+        {
+          path: 'list',
+          loadComponent: () => import('./requirements/requirement-list/requirement-list').then(m => m.RequirementList),
+          data: {
+            meta: {
+              title: 'Requirement List',
+              description: 'View all requirements'
+            }
+          },
+        },
+        {path: '', redirectTo: 'list', pathMatch: 'full'},
+      ]
     },
 
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},

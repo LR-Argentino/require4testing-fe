@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
-import {NewRequirement} from './new-requirement/new-requirement';
 import {ReactiveFormsModule} from '@angular/forms';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-requirements',
   imports: [
-    NewRequirement,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './requirements.html',
   styleUrl: './requirements.css'

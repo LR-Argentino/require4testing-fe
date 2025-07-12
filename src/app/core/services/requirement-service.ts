@@ -1,7 +1,7 @@
 import {computed, inject, Injectable, Signal, signal, WritableSignal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Requirement} from '../../../shared/models/requirement';
-import {CreateUpdateRequirementDto} from '../../../shared/models/create-update-requirement-dto';
+import {Requirement} from '../../requirements/models/requirement';
+import {CreateUpdateRequirementDto} from '../../requirements/models/create-update-requirement-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,12 @@ export class RequirementService {
   private readonly _requirements: WritableSignal<Requirement[]> = signal([]);
   private readonly _isLoading: WritableSignal<boolean> = signal(false);
   private readonly _isFilterByHighPriority: WritableSignal<boolean> = signal(true);
+  private readonly _error: WritableSignal<string | null> = signal(null);
 
   public readonly requirements: Signal<Requirement[]> = this._requirements.asReadonly();
   public readonly isLoading: Signal<boolean> = this._isLoading.asReadonly();
   public readonly isFilterByHighPriority: Signal<boolean> = this._isFilterByHighPriority.asReadonly();
+  public readonly error: Signal<string | null> = this._error.asReadonly();
 
   public readonly sortedByNewest: Signal<Requirement[]> = computed(() => {
     const requirements = this.requirements();
@@ -38,22 +40,22 @@ export class RequirementService {
       return a.title.localeCompare(b.title);
     });
   });
-  public readonly sortedByPriority: Signal<Requirement[]> = computed(() => {
-    const requirements = this.requirements();
-    const isPriorityHigh = this.isFilterByHighPriority();
-    if (!requirements) {
-      return [];
-    }
-
-    return requirements.sort((a, b) => {
-      const priorityOrder = {LOW: 1, MEDIUM: 2, HIGH: 3};
-      if (isPriorityHigh) {
-        return priorityOrder[b.priority] - priorityOrder[a.priority];
-      } else {
-        return priorityOrder[a.priority] - priorityOrder[b.priority];
-      }
-    });
-  });
+  // public readonly sortedByPriority: Signal<Requirement[]> = computed(() => {
+  //   const requirements = this.requirements();
+  //   const isPriorityHigh = this.isFilterByHighPriority();
+  //   if (!requirements) {
+  //     return [];
+  //   }
+  //
+  //   return requirements.sort((a, b) => {
+  //     const priorityOrder = {LOW: "C", MEDIUM: "B", HIGH: "A"};
+  //     if (isPriorityHigh) {
+  //       return priorityOrder[b.priority] - priorityOrder[a.priority];
+  //     } else {
+  //       return priorityOrder[a.priority] - priorityOrder[b.priority];
+  //     }
+  //   });
+  // });
 
   constructor() {
   }
@@ -68,6 +70,7 @@ export class RequirementService {
       },
       error: (error: Error) => {
         console.error('Error fetching requirements:', error);
+        this._error.set(error.message);
         this._requirements.set([]);
         this._isLoading.set(false);
       }
@@ -83,6 +86,7 @@ export class RequirementService {
       },
       error: (error: Error) => {
         console.error('Error fetching requirement by ID:', error);
+        this._error.set(error.message);
         this._isLoading.set(false);
       }
     })
@@ -98,6 +102,7 @@ export class RequirementService {
       },
       error: (error: Error) => {
         console.error('Error creating requirement:', error);
+        this._error.set(error.message);
         this._isLoading.set(false);
       }
     });

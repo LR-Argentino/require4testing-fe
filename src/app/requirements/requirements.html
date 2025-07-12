@@ -1,1 +1,29 @@
-<app-new-requirement></app-new-requirement>
+<div class="min-h-screen bg-gray-900 p-6">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header Section  -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-4xl font-bold text-white">Requirements</h1>
+
+      <!-- Navigation Buttons -->
+      <div class="flex space-x-3">
+        <button
+          routerLink="/requirements/list"
+          routerLinkActive="bg-gray-600"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-lg transition-all"
+        >
+          View All
+        </button>
+        <button
+          routerLink="/requirements/new"
+          routerLinkActive="bg-blue-700"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 hover:shadow-lg transform hover:scale-105"
+        >
+          New Requirement
+        </button>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import {computed, effect, inject, Injectable, Signal, signal, WritableSignal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {LoginRequest} from '../../../shared/models/login-request';
-import {LoginResponse} from '../../../shared/models/login-response';
+import {LoginRequest} from '../../login-form/model/login-request';
+import {LoginResponse} from '../../login-form/model/login-response';
 import {User} from '../../../shared/models/user';
 import {Router} from '@angular/router';
 
@@ -115,7 +115,7 @@ export class AuthenticationService {
     const token = localStorage.getItem('auth_token');
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('roles');
-    
+
     if (token && username && role) {
       this._token.set(token);
       this._user.set({
