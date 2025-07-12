@@ -17,6 +17,7 @@
             <a
               [class]="'text-sm font-medium transition-colors ' + (item.active ? 'text-white' : 'text-gray-300 hover:text-white')"
               href="#"
+              routerLink="{{item.route}}"
             >
               {{ item.name }}
             </a>

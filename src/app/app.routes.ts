@@ -17,6 +17,11 @@ export const routes: Routes = [
       loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard),
       canActivate: [authGurad]
     },
+    {
+      path: 'requirements',
+      loadComponent: () => import('./requirements/requirements').then(m => m.Requirements),
+      canActivate: [authGurad],
+    },
 
     {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
   ]
