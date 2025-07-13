@@ -1,4 +1,4 @@
-import {computed, inject, Injectable, Signal, signal} from '@angular/core';
+import {computed, DestroyRef, inject, Injectable, Signal, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Requirement} from '../../requirements/models/requirement';
 import {RequirementsState} from '../../requirements/models/requirements-state';
@@ -10,6 +10,7 @@ import {CreateRequirementDto, UpdateRequirementDto} from '../../requirements/mod
 })
 export class RequirementService {
   private readonly http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly REQUIREMENT_URL = 'api/requirements';
 
@@ -33,7 +34,7 @@ export class RequirementService {
     }));
 
     this.http.get<Requirement[]>(this.REQUIREMENT_URL)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: Requirement[]) => {
           this._state.update(state => ({
@@ -62,7 +63,7 @@ export class RequirementService {
     }));
 
     this.http.get<Requirement>(`${this.REQUIREMENT_URL}/${id}`)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: Requirement) => {
           this._state.update(state => ({
@@ -90,7 +91,7 @@ export class RequirementService {
       error: null,
     }));
     this.http.post<Requirement>(this.REQUIREMENT_URL, requirement)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: Requirement) => {
           console.log('Created requirement:', response);
@@ -120,7 +121,7 @@ export class RequirementService {
       error: null,
     }));
     this.http.put<Requirement>(`${this.REQUIREMENT_URL}/${id}`, newRequirement)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: Requirement) => {
           console.log('Updated requirement:', response);
@@ -147,7 +148,7 @@ export class RequirementService {
         }
       })
   }
-  
+
   public deleteRequirement(id: number): void {
     this._state.update(state => ({
       ...state,
@@ -155,7 +156,7 @@ export class RequirementService {
       error: null,
     }));
     this.http.delete(`${this.REQUIREMENT_URL}/${id}`)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this._state.update(state => ({
@@ -177,5 +178,23 @@ export class RequirementService {
         }
       });
 
+  }
+
+  public reloadRequirements(): void {
+    this.getAllRequirements();
+  }
+
+  public clearError(): void {
+    this._state.update(state => ({
+      ...state,
+      error: null
+    }));
+  }
+
+  public clearCurrentRequirement(): void {
+    this._state.update(state => ({
+      ...state,
+      currentRequirement: null
+    }));
   }
 }

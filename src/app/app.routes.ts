@@ -43,6 +43,10 @@ export const routes: Routes = [
             }
           },
         },
+        {
+          path: ':id',
+          loadComponent: () => import('./requirements/requirement-detail/requirement-detail').then(m => m.RequirementDetail),
+        },
         {path: '', redirectTo: 'list', pathMatch: 'full'},
       ]
     },

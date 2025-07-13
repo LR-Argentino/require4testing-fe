@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit, Signal} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {RequirementService} from '../../core/services/requirement-service';
 import {Requirement} from '../models/requirement';
 
@@ -13,6 +13,7 @@ import {Requirement} from '../models/requirement';
 })
 export class RequirementList implements OnInit {
   protected readonly requirementService = inject(RequirementService);
+  private readonly router = inject(Router);
 
   protected readonly requirements: Signal<Requirement[]> = this.requirementService.requirements;
   protected readonly totalRequirements: Signal<number> = computed(() => this.requirements().length);
@@ -25,9 +26,7 @@ export class RequirementList implements OnInit {
 
   protected viewRequirement(id: number): void {
     console.log(`Viewing requirement with ID: ${id}`);
-    console.log(this.requirementService.getRequirementById(id));
-    // TODO: Implement navigation to requirement detail
-    // this.router.navigate(['/requirements', id]);
+    this.router.navigate(['/requirements', id]);
   }
 
   protected formatDate(dateString: string): string {
