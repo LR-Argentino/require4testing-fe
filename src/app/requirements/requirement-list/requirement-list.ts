@@ -25,6 +25,7 @@ export class RequirementList implements OnInit {
 
   protected viewRequirement(id: number): void {
     console.log(`Viewing requirement with ID: ${id}`);
+    console.log(this.requirementService.getRequirementById(id));
     // TODO: Implement navigation to requirement detail
     // this.router.navigate(['/requirements', id]);
   }
