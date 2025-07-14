@@ -1,9 +1,16 @@
-import {computed, effect, inject, Injectable, Signal, signal, WritableSignal} from '@angular/core';
+import {computed, effect, inject, Injectable, Signal, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {LoginRequest} from '../../login-form/model/login-request';
 import {LoginResponse} from '../../login-form/model/login-response';
 import {User} from '../../../shared/models/user';
 import {Router} from '@angular/router';
+
+interface AuthenticationState {
+  token: string | null;
+  loggedInUser: User | null;
+  isLoading: boolean;
+  error: string | null;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +19,17 @@ export class AuthenticationService {
   private readonly httpClient = inject(HttpClient);
   private readonly router = inject(Router);
 
-  private readonly _token: WritableSignal<string | null> = signal<string | null>(null);
-  private readonly _user: WritableSignal<User | null> = signal<User | null>(null);
-  private readonly _isLoading: WritableSignal<boolean> = signal<boolean>(false);
-  private readonly _error: WritableSignal<string | null> = signal<string | null>(null);
+  private readonly _state = signal<AuthenticationState>({
+    token: null,
+    loggedInUser: null,
+    isLoading: false,
+    error: null
+  })
 
-  public readonly token: Signal<string | null> = this._token.asReadonly();
-  public readonly user: Signal<User | null> = this._user.asReadonly();
-  public readonly isLoading: Signal<boolean> = this._isLoading.asReadonly();
-  public readonly error: Signal<string | null> = this._error.asReadonly();
+  public readonly token: Signal<string | null> = computed(() => this._state().token);
+  public readonly user: Signal<User | null> = computed(() => this._state().loggedInUser);
+  public readonly isLoading: Signal<boolean> = computed(() => this._state().isLoading);
+  public readonly error: Signal<string | null> = computed(() => this._state().error);
 
   public readonly isAuthenticated = computed(() => {
     return this.token() !== null && this.user() !== null;
@@ -31,7 +40,7 @@ export class AuthenticationService {
 
     effect(() => {
       const isAuthenticated = this.isAuthenticated();
-      const token = this._token();
+      const token = this._state().token;
 
       if (isAuthenticated && token) {
         localStorage.setItem('auth_token', token);
@@ -43,7 +52,7 @@ export class AuthenticationService {
     });
 
     effect(() => {
-      const error = this._error();
+      const error = this._state().error;
 
       if (error) {
         console.error('Authentication error:', error);
@@ -54,8 +63,11 @@ export class AuthenticationService {
   }
 
   public login(request: LoginRequest): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this._state.update(state => ({
+      ...state,
+      isLoading: true,
+      error: null
+    }));
 
     this.httpClient.post<LoginResponse>('api/auth/login', request).subscribe({
       next: (response: LoginResponse) => {
@@ -65,45 +77,60 @@ export class AuthenticationService {
           role: response.roles[0]
         };
 
-        this._user.set(user);
-        this._token.set(response.token);
+        this._state.update(state => ({
+          ...state,
+          token: response.token,
+          loggedInUser: user,
+          isLoading: false,
+          error: null
+        }))
 
-        // TODO: Navigate to the main page or dashboard after successful login
         this.router.navigate((['/'])).then((response) => {
           if (!response) {
             console.error('Navigation failed after login');
           }
           console.log(response);
         })
-        this._isLoading.set(false);
       },
       error: (err) => {
-        this._error.set('Login failed, please check your credentials.');
-        this._isLoading.set(false);
+        this._state.update(state => ({
+          ...state,
+          isLoading: false,
+          error: 'Login failed, please check your credentials.' + err
+        }))
       }
     });
   }
 
   public logout(): void {
-    this._isLoading.set(true);
-    this._error.set(null);
+    this._state.update(state => ({
+      ...state,
+      isLoading: true,
+      error: null
+    }))
 
     this.httpClient.post('api/auth/logout', null).subscribe({
       next: (response: any) => {
         this.clearAuthState();
       },
       error: (err) => {
-        this._error.set('Logout failed, please try again later.');
-        return [];
+        this._state.update(state => ({
+          ...state,
+          isLoading: false,
+          error: 'Logout failed, please try again later.'
+        }))
       }
     })
   }
 
   public clearAuthState(): void {
-    this._token.set(null);
-    this._user.set(null);
-    this._isLoading.set(false);
-    this._error.set(null);
+    this._state.update(state => ({
+      ...state,
+      token: null,
+      loggedInUser: null,
+      isLoading: false,
+      error: null
+    }))
     this.router.navigate(['/login']).then((response) => {
       if (!response) {
         console.error('Navigation failed after logout');
@@ -117,15 +144,25 @@ export class AuthenticationService {
     const role = localStorage.getItem('roles');
 
     if (token && username && role) {
-      this._token.set(token);
-      this._user.set({
-        username: username,
-        email: '',
-        role: role
-      });
+      this._state.update(state => ({
+        ...state,
+        token: token,
+        loggedInUser: {
+          username: username,
+          email: '',
+          role: role
+        },
+        isLoading: false,
+        error: null
+      }))
     } else {
-      this._token.set(null);
-      this._user.set(null);
+      this._state.update(state => ({
+        ...state,
+        token: null,
+        loggedInUser: null,
+        isLoading: false,
+        error: null
+      }));
     }
   }
 }

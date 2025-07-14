@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PriorityLevel } from '../../../shared/enums/priority-level';
-import { StatusLevel } from '../../../shared/enums/status-level';
-import { RequirementService } from '../../core/services/requirement-service';
-import { CreateRequirementDto } from '../models/create-update-requirement-dto';
-import { RequirementFormControls } from '../models/requirement-form';
-import { PRIORITY_OPTIONS, STATUS_OPTIONS, PriorityOption, StatusOption } from '../models/requirement-options';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {PriorityLevel} from '../../../shared/enums/priority-level';
+import {RequirementService} from '../../core/services/requirement-service';
+import {CreateRequirementDto} from '../models/create-update-requirement-dto';
+import {RequirementFormControls} from '../models/requirement-form';
+import {PRIORITY_OPTIONS, PriorityOption, STATUS_OPTIONS, StatusOption} from '../models/requirement-options';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-new-requirement',
@@ -17,6 +17,7 @@ import { PRIORITY_OPTIONS, STATUS_OPTIONS, PriorityOption, StatusOption } from '
 })
 export class NewRequirement implements OnInit {
   private readonly requirementService = inject(RequirementService);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder)
 
   protected requirementForm!: FormGroup<RequirementFormControls>;
@@ -31,10 +32,9 @@ export class NewRequirement implements OnInit {
 
   private initializeForm(): void {
     this.requirementForm = this.fb.group<RequirementFormControls>({
-      title: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(3)] }),
-      description: new FormControl('', { nonNullable: true }),
-      priority: new FormControl(PriorityLevel.MEDIUM, { nonNullable: true, validators: [Validators.required] }),
-      status: new FormControl(StatusLevel.OPEN, { nonNullable: true, validators: [Validators.required] })
+      title: new FormControl('', {nonNullable: true, validators: [Validators.required, Validators.minLength(3)]}),
+      description: new FormControl('', {nonNullable: true}),
+      priority: new FormControl(PriorityLevel.MEDIUM, {nonNullable: true, validators: [Validators.required]})
     });
   }
 
@@ -47,21 +47,20 @@ export class NewRequirement implements OnInit {
     if (this.requirementForm.valid) {
       this.isSubmitting = true;
       const formValue = this.requirementForm.value;
-      
+
       const requirement: CreateRequirementDto = {
         title: formValue.title!,
         description: formValue.description!,
         priority: formValue.priority!,
-        status: formValue.status!
       };
-      
+
       this.requirementService.createRequirement(requirement);
-      
+
       // TODO: Replace with proper notification service and navigation
       setTimeout(() => {
         this.isSubmitting = false;
-        alert('Requirement saved successfully!');
         this.resetForm();
+        this.router.navigate(['/requirements/list']);
       }, 1000);
     } else {
       this.markAllFieldsAsTouched();
@@ -73,7 +72,6 @@ export class NewRequirement implements OnInit {
       title: '',
       description: '',
       priority: PriorityLevel.MEDIUM,
-      status: StatusLevel.OPEN
     });
   }
 
