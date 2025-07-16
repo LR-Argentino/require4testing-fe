@@ -4,6 +4,7 @@ import {StatusLevel} from '../../../shared/enums/status-level';
 export interface Requirement {
   id: number;
   title: string;
+  createdByEmail: string;
   description: string;
   priority: PriorityLevel;
   status: StatusLevel;

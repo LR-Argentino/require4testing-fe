@@ -4,10 +4,11 @@ import {LoginRequest} from '../../login-form/model/login-request';
 import {LoginResponse} from '../../login-form/model/login-response';
 import {User} from '../../../shared/models/user';
 import {Router} from '@angular/router';
+import {LoggedInUser} from '../../../shared/models/logged-in-user';
 
 interface AuthenticationState {
   token: string | null;
-  loggedInUser: User | null;
+  loggedInUser: LoggedInUser | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -27,7 +28,7 @@ export class AuthenticationService {
   })
 
   public readonly token: Signal<string | null> = computed(() => this._state().token);
-  public readonly user: Signal<User | null> = computed(() => this._state().loggedInUser);
+  public readonly user: Signal<LoggedInUser | null> = computed(() => this._state().loggedInUser);
   public readonly isLoading: Signal<boolean> = computed(() => this._state().isLoading);
   public readonly error: Signal<string | null> = computed(() => this._state().error);
 
@@ -72,6 +73,7 @@ export class AuthenticationService {
     this.httpClient.post<LoginResponse>('api/auth/login', request).subscribe({
       next: (response: LoginResponse) => {
         const user: User = {
+          id: response.id,
           username: response.username,
           email: response.email,
           role: response.roles[0]

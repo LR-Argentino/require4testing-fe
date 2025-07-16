@@ -2,7 +2,12 @@ import {computed, DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TestCase} from '../../test-cases/model/test-case';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {TestCaseState} from '../../test-cases/model/test-case-state';
+
+interface TestCaseState {
+  testCases: TestCase[];
+  isLoading: boolean;
+  error: string | null;
+}
 
 @Injectable({
   providedIn: 'root'

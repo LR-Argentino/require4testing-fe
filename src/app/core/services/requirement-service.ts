@@ -1,9 +1,16 @@
 import {computed, DestroyRef, inject, Injectable, Signal, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Requirement} from '../../requirements/models/requirement';
-import {RequirementsState} from '../../requirements/models/requirements-state';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CreateRequirementDto, UpdateRequirementDto} from '../../requirements/models/create-update-requirement-dto';
+
+interface RequirementsState {
+  requirements: Requirement[];
+  currentRequirement: Requirement | null;
+  userIds: number[];
+  isLoading: boolean;
+  error: string | null;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +24,7 @@ export class RequirementService {
   private _state = signal<RequirementsState>({
     requirements: [],
     currentRequirement: null,
+    userIds: [],
     isLoading: false,
     error: null
   });
@@ -37,9 +45,13 @@ export class RequirementService {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: Requirement[]) => {
+          const userIds = [...new Set(response.map(r => r.createdBy))];
+          // TODO: Create RequirementFacade to fetch user details by IDs
+          //  https://claude.ai/chat/135e1574-8752-4a76-8fcf-373e4b2f092b
           this._state.update(state => ({
             ...state,
             requirements: response,
+            userIds: userIds,
             isLoading: false,
             error: null
           }));
