@@ -6,6 +6,7 @@ import {CreateRequirementDto} from '../models/create-update-requirement-dto';
 import {RequirementFormControls} from '../models/requirement-form';
 import {PRIORITY_OPTIONS, PriorityOption, STATUS_OPTIONS, StatusOption} from '../models/requirement-options';
 import {Router} from '@angular/router';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-new-requirement',
@@ -43,7 +44,7 @@ export class NewRequirement implements OnInit {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  protected onSubmit(): void {
+  protected async onSubmit(): Promise<void> {
     if (this.requirementForm.valid) {
       this.isSubmitting = true;
       const formValue = this.requirementForm.value;
@@ -54,7 +55,9 @@ export class NewRequirement implements OnInit {
         priority: formValue.priority!,
       };
 
-      this.requirementService.createRequirement(requirement);
+      const createdRequ = await firstValueFrom(this.requirementService.createRequirement(requirement));
+
+      console.log(createdRequ);
 
       // TODO: Replace with proper notification service and navigation
       setTimeout(() => {

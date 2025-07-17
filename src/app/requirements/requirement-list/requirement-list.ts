@@ -1,7 +1,10 @@
-import {Component, computed, inject, OnInit, Signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {RequirementService} from '../../core/services/requirement-service';
 import {Requirement} from '../models/requirement';
+import {UserService} from '../../core/services/user-service';
+import {firstValueFrom} from 'rxjs';
+import {User} from '../../../shared/models/user';
 
 @Component({
   selector: 'app-requirement-list',
@@ -12,21 +15,61 @@ import {Requirement} from '../models/requirement';
   styleUrl: './requirement-list.css'
 })
 export class RequirementList implements OnInit {
-  protected readonly requirementService = inject(RequirementService);
+  private readonly requirementService = inject(RequirementService);
+  private readonly userService = inject(UserService);
   private readonly router = inject(Router);
 
-  protected readonly requirements: Signal<Requirement[]> = this.requirementService.requirements;
-  protected readonly totalRequirements: Signal<number> = computed(() => this.requirements().length);
-  protected readonly isLoading: Signal<boolean> = this.requirementService.isLoading;
-  protected readonly error: Signal<string | null> = this.requirementService.error;
+
+  private _users = signal<Map<number, User>>(new Map<number, User>());
+  private _requirements = signal<Requirement[]>([]);
+  private _isLoading = signal<boolean>(false);
+  private _error = signal<string | null>(null);
+
+  protected isLoading = this._isLoading.asReadonly();
+  protected requirements = this._requirements.asReadonly();
+  protected error = this._error.asReadonly();
+
+  requirementsWithUsers = computed(() => {
+    const reqs = this._requirements();
+    const userMap = this._users();
+
+    return reqs.map(requirement => ({
+      ...requirement,
+      createdByUser: userMap.get(requirement.createdBy) || null
+    }));
+  });
 
   ngOnInit(): void {
-    this.loadRequirements();
+    this.loadData();
   }
 
-  protected viewRequirement(id: number): void {
-    console.log(`Viewing requirement with ID: ${id}`);
-    this.router.navigate(['/requirements', id]);
+
+  private async loadData(): Promise<void> {
+    this._isLoading.set(true);
+    this._error.set(null);
+    try {
+      const requirements = await firstValueFrom(this.requirementService.fetchAllRequirements());
+      this._requirements.set(requirements || []);
+
+      if (requirements && requirements.length > 0) {
+        const userIds = [...new Set(requirements.map(req => req.createdBy))];
+        const userMap = await firstValueFrom(this.userService.getUsersByIds(userIds));
+
+        this._users.set(userMap || new Map());
+
+      }
+      this._isLoading.set(false);
+
+    } catch (error) {
+      console.error('Error loading requirements:', error);
+      this._error.set('An error occurred while loading requirements.');
+    } finally {
+      this._isLoading.set(false);
+    }
+  }
+
+  protected loadRequirements(): void {
+    this.loadData();
   }
 
   protected formatDate(dateString: string): string {
@@ -38,17 +81,15 @@ export class RequirementList implements OnInit {
     });
   }
 
-  protected getInitials(fullName: string): string {
-    // TODO: Replace with actual user service call
-    return fullName
-      .split(' ')
-      .map(name => name.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  }
+  protected viewRequirement(id: number): void {
+    console.log(`Viewing requirement with ID: ${id}`);
+    const currentReq = this.requirements().filter(requirement => requirement.id === id);
 
-  protected loadRequirements(): void {
-    this.requirementService.getAllRequirements();
+    if (currentReq) {
+      console.log(currentReq);
+      this.router.navigate(['/requirements', id],
+        {state: {requirement: currentReq}}
+      );
+    }
   }
 }

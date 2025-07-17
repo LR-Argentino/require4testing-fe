@@ -1,14 +1,18 @@
-import {Component, computed, inject, OnInit} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {RequirementService} from '../../core/services/requirement-service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {DatePipe, NgClass} from '@angular/common';
 import {TestCaseService} from '../../core/services/test-case-service';
+import {Requirement} from '../models/requirement';
+import {DatePipe, NgClass} from '@angular/common';
+import {firstValueFrom} from 'rxjs';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-requirement-detail',
   imports: [
+    DatePipe,
     NgClass,
-    DatePipe
+    FormsModule
   ],
   templateUrl: './requirement-detail.html',
   styleUrl: './requirement-detail.css'
@@ -19,14 +23,27 @@ export class RequirementDetail implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
+  private readonly _requirement = signal<Requirement | null>(null);
+  private readonly _isEditing = signal<boolean>(false);
+
+  protected readonly requirement = this._requirement.asReadonly();
+  protected readonly isEditing = this._isEditing.asReadonly();
+
+  constructor() {
+    const navigation = this.router.getCurrentNavigation();
+    const req = navigation?.extras.state?.['requirement'][0];
+    console.log(req);
+    this._requirement.set(req || null);
+  }
 
   requirementId = computed(() => {
     const id = this.route.snapshot.paramMap.get('id');
     return id ? Number(id) : 0;
   });
 
-  ngOnInit(): void {
-    this.requirementsService.getRequirementById(this.requirementId());
+  async ngOnInit(): Promise<void> {
+    const req = await firstValueFrom(this.requirementsService.getRequirementById(this.requirementId()))
+    this._requirement.set(req);
     this.testCaseService.fetchTestCasesByRequirementId(this.requirementId());
   }
 
@@ -35,23 +52,24 @@ export class RequirementDetail implements OnInit {
   }
 
   protected clearError(): void {
-    this.requirementsService.clearError();
+    // this.requirementsService.clearError();
   }
 
-  protected deleteRequirement(): void {
-    this.requirementsService.deleteRequirement(this.requirementId());
+  protected async deleteRequirement(): Promise<void> {
+    await firstValueFrom(this.requirementsService.deleteRequirement(this.requirementId()));
     this.router.navigate(['/requirements/list']);
   }
 
   protected editRequirement(): void {
-    const req = this.requirementsService.currentRequirement();
-    if (req) {
-      this.router.navigate(['/requirements', req.id, 'edit']);
-    }
+    this._isEditing.set(!this.isEditing());
+    // const req = this.requirementsService.currentRequirement();
+    // if (req) {
+    //   this.router.navigate(['/requirements', req.id, 'edit']);
+    // }
   }
 
   protected goBack(): void {
-    this.requirementsService.clearCurrentRequirement();
+    // this.requirementsService.clearCurrentRequirement();
     this.router.navigate(['/requirements/list']);
   }
 
