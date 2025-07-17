@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Requirement} from '../../requirements/models/requirement';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CreateRequirementDto, UpdateRequirementDto} from '../../requirements/models/create-update-requirement-dto';
+import {Observable} from 'rxjs';
 
 interface RequirementsState {
   requirements: Requirement[];
@@ -18,7 +19,6 @@ interface RequirementsState {
 export class RequirementService {
   private readonly http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
-
   private readonly REQUIREMENT_URL = 'api/requirements';
 
   private _state = signal<RequirementsState>({
@@ -33,6 +33,11 @@ export class RequirementService {
   public readonly currentRequirement: Signal<Requirement | null> = computed(() => this._state().currentRequirement);
   public readonly isLoading: Signal<boolean> = computed(() => this._state().isLoading);
   public readonly error: Signal<string | null> = computed(() => this._state().error);
+
+  public fetchAllRequirements(): Observable<Requirement[]> {
+    return this.http.get<Requirement[]>(this.REQUIREMENT_URL);
+  }
+
 
   public getAllRequirements(): void {
     this._state.update(state => ({

@@ -1,7 +1,7 @@
 import {computed, DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../../shared/models/user';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {catchError, map, Observable, of} from 'rxjs';
 
 interface UserState {
   users: User[];
@@ -61,32 +61,26 @@ export class UserService {
       });
   }
 
-  public getUsersByIds(userIds: number[]) {
-    this._state.update(state => ({
-      ...state,
-      isLoading: true,
-      error: null
-    }));
-    this.http.post<BatchUserPost>('/api/users/batch', userIds)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (users: { [key: string]: User }) => {
-          const userList = Object.values(users);
-          this._state.update(state => ({
-            ...state,
-            users: userList,
-            isLoading: false,
-            error: null
-          }));
-        },
-        error: (error: Error) => {
-          this._state.update(state => ({
-            ...state,
-            isLoading: false,
-            error: error.message
-          }));
-          console.error('Error fetching users:', error);
-        }
-      });
+  public getUsersByIds(userIds: number[]): Observable<Map<number, User>> {
+    if (userIds.length === 0) {
+      return of(new Map());
+    }
+
+    const uniqueIds = [...new Set(userIds)];
+
+    return this.http.post<{ [key: string]: User }>(`${this.USER_URL}/batch`, uniqueIds)
+      .pipe(
+        map(response => {
+          const userMap = new Map<number, User>();
+          Object.entries(response).forEach(([id, user]) => {
+            userMap.set(Number(id), user);
+          });
+          return userMap;
+        }),
+        catchError(error => {
+          console.error('Error loading users:', error);
+          return of(new Map<number, User>());
+        })
+      );
   }
 }
