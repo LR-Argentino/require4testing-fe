@@ -1,6 +1,5 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {AuthenticationService} from './core/services/authentication-service';
 import {Header} from './header/header';
 
 @Component({
@@ -14,13 +13,8 @@ import {Header} from './header/header';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly authService = inject(AuthenticationService);
 
   constructor() {
   }
 
-
-  onTapLogin(): void {
-    this.authService.login({username: 'testuser', password: 'password'});
-  }
 }

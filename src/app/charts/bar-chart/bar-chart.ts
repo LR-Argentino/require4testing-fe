@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ChartData} from '../../../shared/models/chart-data';
+import {ChartData} from '../model/chart-data';
 
 @Component({
   selector: 'app-bar-chart',
