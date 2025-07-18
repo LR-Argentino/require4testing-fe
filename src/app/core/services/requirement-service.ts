@@ -25,17 +25,5 @@ export class RequirementService {
 
   constructor() {
   }
-
-  private updateState(updates: Partial<RequirementState>) {
-    this._state.update(current => ({...current, ...updates}));
-  }
-
-  private setLoading(isLoading: boolean) {
-    this.updateState({isLoading})
-  }
-
-  private setError(error: string | null) {
-    this.updateState({error});
-  }
 }
 
