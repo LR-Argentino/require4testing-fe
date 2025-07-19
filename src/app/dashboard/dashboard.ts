@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Navigation} from '../navigation/navigation';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [
+    Navigation
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
