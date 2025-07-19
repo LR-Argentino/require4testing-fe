@@ -1,5 +1,4 @@
 import {Routes} from '@angular/router';
-import {authGurad} from './core/guards/auth-gurad';
 
 export const routes: Routes = [
     {
@@ -13,11 +12,15 @@ export const routes: Routes = [
       }
     },
     {
-      path: 'dashboard',
-      loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard),
-      canActivate: [authGurad]
+      path: 'board',
+      loadComponent: () => import('./kanban-board/kanban-board').then(m => m.KanbanBoard),
+      data: {
+        meta: {
+          title: 'Kanban Board',
+          description: 'Manage your tasks with the Kanban board'
+        }
+      }
     },
-
-    {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+    {path: '', redirectTo: 'board', pathMatch: 'full'},
   ]
 ;

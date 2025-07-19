@@ -1,0 +1,83 @@
+<div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+  <!-- Status Indicator -->
+  <div class="flex items-center gap-2 mb-3">
+    <div [ngClass]="getStatusClasses()" class="w-2 h-2 rounded-full"></div>
+    <span [ngClass]="getStatusTextClasses()" class="text-xs font-medium px-2 py-1 rounded">
+          {{ getStatusText() }}
+        </span>
+  </div>
+
+  <!-- Title -->
+  <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
+    {{ testCase.title }}
+  </h3>
+
+  <!-- Description -->
+  <p class="text-gray-600 text-xs mb-4 line-clamp-2">
+    {{ testCase.description }}
+  </p>
+
+  <!-- Assignees -->
+  <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center">
+      <span class="text-xs text-gray-500 mr-2">TestRuns:</span>
+      <div class="flex -space-x-2">
+        <div
+          class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium"
+          [style.z-index]="testCase.testRun.length">
+          {{ testCase.testRun.length }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date and Priority -->
+  <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center text-xs text-gray-500">
+      <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+      </svg>
+      {{ testCase.updatedAt }}
+    </div>
+    <!--    <span [ngClass]="getPriorityClasses()" class="text-xs font-medium px-2 py-1 rounded">-->
+    <!--          {{ testCase.priority.charAt(0).toUpperCase() + testCase.priority.slice(1) }}-->
+    <!--        </span>-->
+  </div>
+
+  <!-- Stats -->
+  <div class="flex items-center gap-4 text-xs text-gray-500">
+    <div class="flex items-center gap-1">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-4.906-1.436L3 21l1.436-5.094A8.955 8.955 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"></path>
+      </svg>
+      <!--      <span>{{ testCase.comments }} Comments</span>-->
+    </div>
+
+    <div class="flex items-center gap-1" *ngIf="testCase.links > 0">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+      </svg>
+      <!--      <span>{{ testCase.links }} Links</span>-->
+    </div>
+
+    <div class="flex items-center gap-1" *ngIf="testCase.attachments > 0">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+      </svg>
+      <!--      <span>{{ testCase.attachments }}/{{ getMaxAttachments() }}</span>-->
+    </div>
+  </div>
+
+  <!-- Action Menu -->
+  <button
+    class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+    </svg>
+  </button>
+</div>
