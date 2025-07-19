@@ -1,12 +1,34 @@
 import {Component} from '@angular/core';
 import {TestCase} from '../../shared/models/test-case';
 import {Status} from '../../shared/enums/status';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDragPreview,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
 import {Card} from '../card/card';
+
+export interface KanbanColumn {
+  id: string;
+  title: string;
+  color: string;
+  cases: TestCase[];
+}
 
 @Component({
   selector: 'app-kanban-board',
   imports: [
-    Card
+    CdkDropList,
+    Card,
+    CdkDropListGroup,
+    CdkDrag,
+    CdkDragHandle,
+    CdkDragPreview
   ],
   templateUrl: './kanban-board.html',
   styleUrl: './kanban-board.css'
@@ -24,4 +46,48 @@ export class KanbanBoard {
     creationDate: new Date().toDateString(),
     testRun: []
   };
+
+  columns: KanbanColumn[] = [
+    {
+      id: 'open',
+      title: 'Open',
+      color: 'bg-yellow-500',
+      cases: [
+        this.testCase,
+      ]
+    },
+    {
+      id: 'in-progress',
+      title: 'In Progress',
+      color: 'bg-blue-500',
+      cases: []
+    },
+    {
+      id: 'closed',
+      title: 'Closed',
+      color: 'bg-green-500',
+      cases: []
+    }
+  ];
+
+  drop(event: CdkDragDrop<TestCase[]>) {
+    if (event.previousContainer === event.container) {
+      // Reorder within same column
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      // Move between columns
+      const task = event.previousContainer.data[event.previousIndex];
+
+      // Update task status based on target column
+      const targetColumnId = event.container.id;
+      // task.status = targetColumnId as 'OPEN' | 'IN_PROGRESS' | 'CLOSED';
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
 }
