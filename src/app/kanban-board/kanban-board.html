@@ -7,9 +7,8 @@
 
   <!-- Kanban Board -->
   <div cdkDropListGroup class="flex gap-6 overflow-x-auto pb-4">
-    @for (column of columns; track column) {
-      <div
-        class="flex-shrink-0 w-80">
+    @for (column of columns; track column.id) {
+      <div class="flex-shrink-0 w-80">
 
         <!-- Column Header -->
         <div class="flex items-center justify-between mb-4">
@@ -34,27 +33,33 @@
           [id]="column.id"
           cdkDropList
           (cdkDropListDropped)="drop($event)"
-          class="min-h-[500px] space-y-3">
+          class="min-h-[500px] space-y-3 p-2 rounded-lg">
 
           <!-- Task Cards -->
-          @for (case of column.cases; track case) {
-            <app-card
-              [testCase]="case"
+          @for (case of column.cases; track case.id) {
+            <div
               cdkDrag
-              class="cursor-grab active:cursor-grabbing">
+              [cdkDragData]="case"
+              class="relative group">
+
+              <!-- Card Component -->
+              <app-card [testCase]="case"></app-card>
 
               <!-- Drag Handle (visible on hover) -->
-              <div cdkDragHandle class="opacity-0 hover:opacity-100 transition-opacity p-1 absolute top-2 left-2 z-10">
+              <div
+                cdkDragHandle
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white rounded shadow-sm z-10 cursor-grab">
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9h8M8 15h8"></path>
                 </svg>
               </div>
 
-              <!-- Drag Preview -->
-              <div *cdkDragPreview class="bg-white rounded-lg border border-gray-200 p-4 shadow-lg max-w-xs">
+              <!-- Custom Drag Preview -->
+              <div *cdkDragPreview class="bg-white rounded-lg border border-gray-200 p-4 shadow-xl max-w-xs opacity-90">
                 <h3 class="font-semibold text-gray-900 text-sm">{{ case.title }}</h3>
+                <p class="text-gray-600 text-xs mt-1">{{ case.description }}</p>
               </div>
-            </app-card>
+            </div>
           }
 
           <!-- Add Task Button -->
@@ -69,17 +74,5 @@
         </div>
       </div>
     }
-
-
-    <!-- Add Column Button -->
-    <div class="flex-shrink-0 w-80">
-      <button
-        class="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        Add Column
-      </button>
-    </div>
   </div>
 </div>

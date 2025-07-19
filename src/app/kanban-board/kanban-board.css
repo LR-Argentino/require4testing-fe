@@ -1,13 +1,21 @@
+/* kanban-board.css - Verbesserte Drag & Drop Styles */
+
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 8px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background: white;
+  /* Wichtig: Stelle sicher dass der Preview sichtbar ist */
+  opacity: 1 !important;
+  z-index: 1000;
 }
 
 .cdk-drag-placeholder {
   opacity: 0.4;
   border: 2px dashed #cbd5e1;
   background: #f8fafc;
+  /* Mindesthöhe damit der Placeholder sichtbar bleibt */
+  min-height: 100px;
 }
 
 .cdk-drag-animating {
@@ -20,9 +28,43 @@
 
 .cdk-drop-list {
   transition: background-color 250ms cubic-bezier(0, 0, 0.2, 1);
+  /* Mindesthöhe für leere Columns */
+  min-height: 500px;
+  /* Wichtig: Position relative für korrekte Positionierung */
+  position: relative;
 }
 
 .cdk-drop-list.cdk-drop-list-receiving {
   background-color: rgba(59, 130, 246, 0.05);
   border-radius: 8px;
+  border: 2px dashed rgba(59, 130, 246, 0.3);
+}
+
+/* Drag Handle Styling */
+.cdk-drag-handle {
+  cursor: grab;
+}
+
+.cdk-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Stelle sicher dass Cards draggable sind */
+.cdk-drag {
+  cursor: grab;
+  position: relative;
+  /* Wichtig: z-index für korrekte Layering */
+  z-index: 1;
+}
+
+.cdk-drag:active {
+  cursor: grabbing;
+}
+
+/* Verhindere Textauswahl während Drag */
+.cdk-drag-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

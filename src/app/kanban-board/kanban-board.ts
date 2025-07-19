@@ -23,12 +23,12 @@ export interface KanbanColumn {
 @Component({
   selector: 'app-kanban-board',
   imports: [
-    CdkDropList,
-    Card,
     CdkDropListGroup,
+    CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    CdkDragPreview
+    CdkDragPreview,
+    Card
   ],
   templateUrl: './kanban-board.html',
   styleUrl: './kanban-board.css'
@@ -47,6 +47,20 @@ export class KanbanBoard {
     testRun: []
   };
 
+  // Weitere Test Cases hinzufügen für bessere Demo
+  protected readonly testCase2: TestCase = {
+    id: 2,
+    title: 'Another Test Case',
+    description: 'This is another test case for testing drag and drop.',
+    requirementId: 103,
+    status: Status.OPEN,
+    testResult: null,
+    createdBy: 2,
+    updatedAt: new Date().toISOString(),
+    creationDate: new Date().toDateString(),
+    testRun: []
+  };
+
   columns: KanbanColumn[] = [
     {
       id: 'open',
@@ -54,6 +68,7 @@ export class KanbanBoard {
       color: 'bg-yellow-500',
       cases: [
         this.testCase,
+        this.testCase2
       ]
     },
     {
@@ -71,16 +86,30 @@ export class KanbanBoard {
   ];
 
   drop(event: CdkDragDrop<TestCase[]>) {
+    console.log('Drop event triggered:', event); // Debug Log
+
     if (event.previousContainer === event.container) {
       // Reorder within same column
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      console.log('Moved within same column');
     } else {
       // Move between columns
       const task = event.previousContainer.data[event.previousIndex];
+      console.log('Moving task between columns:', task);
 
       // Update task status based on target column
       const targetColumnId = event.container.id;
-      // task.status = targetColumnId as 'OPEN' | 'IN_PROGRESS' | 'CLOSED';
+      switch (targetColumnId) {
+        case 'open':
+          task.status = Status.OPEN;
+          break;
+        case 'in-progress':
+          task.status = Status.IN_PROGRESS;
+          break;
+        case 'closed':
+          task.status = Status.CLOSED;
+          break;
+      }
 
       transferArrayItem(
         event.previousContainer.data,
@@ -88,6 +117,8 @@ export class KanbanBoard {
         event.previousIndex,
         event.currentIndex
       );
+
+      console.log('Task moved and status updated to:', task.status);
     }
   }
 }
