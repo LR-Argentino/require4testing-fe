@@ -72,6 +72,7 @@ export class AuthenticationService {
     this.httpClient.post<LoginResponse>('api/auth/login', request).subscribe({
       next: (response: LoginResponse) => {
         const user: User = {
+          id: null,
           username: response.username,
           email: response.email,
           role: response.roles[0]
@@ -151,6 +152,7 @@ export class AuthenticationService {
         ...state,
         token: token,
         user: {
+          id: null,
           username: username,
           email: '',
           role: role

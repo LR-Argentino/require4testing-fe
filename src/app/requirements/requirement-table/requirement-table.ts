@@ -25,16 +25,8 @@ export class RequirementTable implements OnInit {
   // Drawer state
   isDrawerOpen = false;
   selectedRequirement: Requirement | null = null;
-
-  // Mock users data
-  private users = new Map([
-    [1, {name: 'Adrian Bert', email: 'adrian@example.com'}],
-    [2, {name: 'Anna Miller', email: 'anna@example.com'}],
-    [3, {name: 'Tom Bradley', email: 'tom@example.com'}],
-    [4, {name: 'Marcus Johnson', email: 'marcus@example.com'}],
-    [5, {name: 'Sarah Wilson', email: 'sarah@example.com'}]
-  ]);
   
+
   ngOnInit(): void {
     this.requirementService.getRequirements();
   }
@@ -115,13 +107,8 @@ export class RequirementTable implements OnInit {
     }
   }
 
-  getUserName(userId: number): string {
-    return this.users.get(userId)?.name || `User ${userId}`;
-  }
-
-  getUserInitials(userId: number): string {
-    const userName = this.getUserName(userId);
-    return userName
+  getUserInitials(username: string): string {
+    return username
       .split(' ')
       .map(n => n[0])
       .join('')
@@ -129,11 +116,4 @@ export class RequirementTable implements OnInit {
       .slice(0, 2);
   }
 
-  formatDate(date: Date): string {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
 }

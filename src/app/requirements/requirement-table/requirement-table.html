@@ -121,12 +121,12 @@
                   <div
                     class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
                         <span class="text-white text-xs font-medium">
-                          {{ getUserInitials(requirement.createdBy) }}
+                          {{ getUserInitials(requirement.user.username) }}
                         </span>
                   </div>
                 </div>
                 <div class="ml-3">
-                  <div class="text-sm font-medium text-gray-900">{{ getUserName(requirement.createdBy) }}</div>
+                  <div class="text-sm font-medium text-gray-900">{{ requirement.user.username }}</div>
                 </div>
               </div>
             </td>
