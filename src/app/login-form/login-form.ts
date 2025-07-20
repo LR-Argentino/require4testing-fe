@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {AuthenticationService} from '../core/services/authentication-service';
+import {AuthenticationService} from '../../core/services/authentication-service';
 import {LoginRequest} from '../../shared/models/login-request';
 import {Spinner} from '../../shared/spinner/spinner';
 

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgClass} from '@angular/common';
+import {DatePipe, NgClass} from '@angular/common';
 import {Requirement} from '../../../shared/models/requirement';
 import {TestCase} from '../../../shared/models/test-case';
 import {Status} from '../../../shared/enums/status';
@@ -9,7 +9,8 @@ import {Priority} from '../../../shared/enums/priority';
 @Component({
   selector: 'app-requirement-detail',
   imports: [
-    NgClass
+    NgClass,
+    DatePipe
   ],
   templateUrl: './requirement-detail.html',
   styleUrl: './requirement-detail.css'
@@ -195,15 +196,5 @@ export class RequirementDetail {
       .join('')
       .toUpperCase()
       .slice(0, 2);
-  }
-
-  formatDate(date: Date): string {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   }
 }

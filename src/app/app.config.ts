@@ -8,7 +8,7 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {authInterceptorInterceptor} from './core/interceptors/auth-interceptor-interceptor';
+import {authInterceptorInterceptor} from '../core/interceptors/auth-interceptor-interceptor';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 export const appConfig: ApplicationConfig = {

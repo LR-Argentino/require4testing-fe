@@ -64,7 +64,7 @@
       </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        @for (requirement of requirements; track requirement.id) {
+        @for (requirement of requirementService.requirements(); track requirement.id) {
           <tr class="hover:bg-gray-50 transition-colors cursor-pointer" (click)="openRequirementDrawer(requirement)">
             <!-- Title -->
             <td class="px-6 py-4 whitespace-nowrap">
@@ -133,7 +133,7 @@
 
             <!-- Updated At -->
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {{ formatDate(requirement.updatedAt) }}
+              {{ requirement.updatedAt | date:'yyyy-MM-dd' }}
             </td>
 
             <!-- Actions -->
@@ -155,7 +155,7 @@
   <div class="bg-white px-6 py-3 border-t border-gray-200">
     <div class="flex items-center justify-between">
       <div class="text-sm text-gray-700">
-        Showing <span class="font-medium">{{ requirements.length }}</span> requirements
+        Showing <span class="font-medium">{{ requirementService.requirements().length }}</span> requirements
       </div>
       <div class="flex items-center space-x-2">
         <button class="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50" disabled>

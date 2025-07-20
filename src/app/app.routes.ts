@@ -1,5 +1,6 @@
 // src/app/app.routes.ts
 import {Routes} from '@angular/router';
+import {authGurad} from '../core/guards/auth-gurad';
 
 export const routes: Routes = [
   {
@@ -34,7 +35,8 @@ export const routes: Routes = [
             title: 'Kanban Board',
             description: 'Manage your tasks with the Kanban board'
           }
-        }
+        },
+        canActivate: [authGurad]
       },
       // {
       //   path: 'test-cases',
@@ -64,7 +66,8 @@ export const routes: Routes = [
             title: 'Requirements',
             description: 'Manage project requirements'
           }
-        }
+        },
+        canActivate: [authGurad]
       },
       {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
     ]

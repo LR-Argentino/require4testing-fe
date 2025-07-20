@@ -1,8 +1,8 @@
 import {computed, effect, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {LoginRequest} from '../../../shared/models/login-request';
-import {LoginResponse} from '../../../shared/models/login-response';
-import {User} from '../../../shared/models/user';
+import {LoginRequest} from '../../shared/models/login-request';
+import {LoginResponse} from '../../shared/models/login-response';
+import {User} from '../../shared/models/user';
 import {Router} from '@angular/router';
 
 interface AuthenticationState {
