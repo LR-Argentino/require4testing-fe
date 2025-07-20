@@ -57,11 +57,7 @@
           <div class="flex items-center justify-between">
             <span class="text-sm text-gray-600">Created By</span>
             <div class="flex items-center">
-              <div
-                class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center mr-2">
-                <span class="text-white text-xs font-medium">{{ getUserInitials(requirement.createdBy) }}</span>
-              </div>
-              <span class="text-sm text-gray-900">{{ getUserName(requirement.createdBy) }}</span>
+              <span class="text-sm text-gray-900">{{ requirement.user.email }}</span>
             </div>
           </div>
 
@@ -125,7 +121,7 @@
                       <div class="ml-3">
                         <div
                           class="w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-                          <span class="text-white text-xs font-medium">{{ getUserInitials(testCase.createdBy) }}</span>
+                          <!--                          <span class="text-white text-xs font-medium">{{ getUserInitials(testCase) }}</span>-->
                         </div>
                       </div>
                     </div>

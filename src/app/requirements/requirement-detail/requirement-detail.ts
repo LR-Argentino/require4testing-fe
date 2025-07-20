@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DatePipe, NgClass} from '@angular/common';
-import {Requirement} from '../../../shared/models/requirement';
 import {TestCase} from '../../../shared/models/test-case';
 import {Status} from '../../../shared/enums/status';
 import {TestResult} from '../../../shared/enums/test-result';
 import {Priority} from '../../../shared/enums/priority';
+import {RequirementUserBatchDto} from '../../../shared/models/requirement-user-batch-dto';
 
 @Component({
   selector: 'app-requirement-detail',
@@ -17,19 +17,10 @@ import {Priority} from '../../../shared/enums/priority';
 })
 export class RequirementDetail {
   @Input() isOpen: boolean = false;
-  @Input() requirement: Requirement | null = null;
+  @Input() requirement: RequirementUserBatchDto | null = null;
   @Output() closeDrawerEvent = new EventEmitter<void>();
 
   activeTab: 'testcases' | 'activity' = 'testcases';
-
-  // Mock users data
-  private users = new Map([
-    [1, {name: 'Adrian Bert', email: 'adrian@example.com'}],
-    [2, {name: 'Anna Miller', email: 'anna@example.com'}],
-    [3, {name: 'Tom Bradley', email: 'tom@example.com'}],
-    [4, {name: 'Marcus Johnson', email: 'marcus@example.com'}],
-    [5, {name: 'Sarah Wilson', email: 'sarah@example.com'}]
-  ]);
 
   // Mock test cases data
   private testCases: TestCase[] = [
@@ -184,13 +175,8 @@ export class RequirementDetail {
     }
   }
 
-  getUserName(userId: number): string {
-    return this.users.get(userId)?.name || `User ${userId}`;
-  }
-
-  getUserInitials(userId: number): string {
-    const userName = this.getUserName(userId);
-    return userName
+  getUserInitials(username: string): string {
+    return username
       .split(' ')
       .map(n => n[0])
       .join('')

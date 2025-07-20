@@ -54,10 +54,11 @@ export class SidebarNavigation {
   ];
 
   getCurrentUser(): string {
-    return 'Max Mustermann'; // In real app, get from auth service
+    return 'Luca Argentino'; // In real app, get from auth service
   }
 
   getUserInitial(): string {
+
     const user = this.getCurrentUser();
     return user.split(' ').map(n => n[0]).join('').toUpperCase();
   }
