@@ -85,6 +85,8 @@ export class KanbanBoard {
     }
   ];
 
+  // TODO: https://dribbble.com/shots/25080871-Task-Management-Saas-Web-App-Board-Task
+
   drop(event: CdkDragDrop<TestCase[]>) {
     console.log('Drop event triggered:', event); // Debug Log
 
@@ -102,12 +104,15 @@ export class KanbanBoard {
       switch (targetColumnId) {
         case 'open':
           task.status = Status.OPEN;
+          // TODO: call partial update here
           break;
         case 'in-progress':
           task.status = Status.IN_PROGRESS;
+          // TODO: call partial update here
           break;
         case 'closed':
           task.status = Status.CLOSED;
+          // TODO: call partial update here
           break;
       }
 

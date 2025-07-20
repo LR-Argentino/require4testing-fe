@@ -1,0 +1,42 @@
+<aside class="fixed left-0 top-0 h-full w-64 bg-gray-50 shadow-xl z-10">
+  <!-- Header -->
+  <div class="p-6 border-b border-gray-400/30 p-4">
+    <div class="flex items-center">
+      <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-lg">
+        <span class="text-orange-600 font-bold text-lg">R4T</span>
+      </div>
+      <div class="ml-3">
+        <h1 class="font-semibold text-lg">Require4Testing</h1>
+        <p class="text-sm">Test Management</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Items -->
+  <nav class="flex-1 px-4 py-6 space-y-2">
+    @for (item of navigationItems; track item.id) {
+      <app-sidebar-item
+        [routerLink]="item.route"
+        [item]="item"
+        [isActive]="item.active || false">
+      </app-sidebar-item>
+    }
+  </nav>
+
+  <!-- Profile Section -->
+  <div class="border-t border-gray-400/30 p-4">
+    <div
+      class="flex items-center space-x-3 p-3 rounded-lg   transition-colors cursor-pointer">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center shadow-md">
+        <span class="text-orange-600 font-semibold text-sm">{{ getUserInitial() }}</span>
+      </div>
+      <div class="flex-1">
+        <p class="font-medium text-sm">{{ getCurrentUser() }}</p>
+        <p class="text-blue-500 text-xs">Administrator</p>
+      </div>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+  </div>
+</aside>

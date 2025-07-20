@@ -1,0 +1,191 @@
+@if (isOpen && requirement) {
+  <div class="fixed inset-0 z-50" style="background-color: rgba(0, 0, 0, 0.3);" (click)="closeDrawer()">
+    <!-- Drawer -->
+    <div
+      class="fixed right-0 top-0 h-full w-2xl bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
+      (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between p-6 border-b border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900 pr-4">{{ requirement.title }}</h2>
+        <button (click)="closeDrawer()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="flex flex-col h-full pb-16">
+        <!-- Requirement Details -->
+        <div class="p-6 space-y-4 border-b border-gray-200">
+
+          <!-- Created Time -->
+          <div class="flex items-center text-sm text-gray-600">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Created time: {{ formatDate(requirement.createdAt) }}
+          </div>
+
+          <!-- Status -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Status</span>
+            <span [ngClass]="getStatusClasses(requirement.status)"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                  {{ getStatusLabel(requirement.status) }}
+                </span>
+          </div>
+
+          <!-- Priority -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Priority</span>
+            <span [ngClass]="getPriorityClasses(requirement.priority)"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                  {{ getPriorityLabel(requirement.priority) }}
+                </span>
+          </div>
+
+          <!-- Due Date -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Updated At</span>
+            <span class="text-sm text-gray-900">{{ formatDate(requirement.updatedAt) }}</span>
+          </div>
+
+          <!-- Assignees -->
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Created By</span>
+            <div class="flex items-center">
+              <div
+                class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center mr-2">
+                <span class="text-white text-xs font-medium">{{ getUserInitials(requirement.createdBy) }}</span>
+              </div>
+              <span class="text-sm text-gray-900">{{ getUserName(requirement.createdBy) }}</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          @if (requirement.description) {
+            <div>
+              <h3 class="text-sm font-medium text-gray-900 mb-2">Description</h3>
+              <p class="text-sm text-gray-600 leading-relaxed">{{ requirement.description }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-gray-200">
+          <button
+            [ngClass]="{ 'border-blue-500 text-blue-600': activeTab === 'testcases', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'testcases' }"
+            class="py-3 px-6 border-b-2 font-medium text-sm transition-colors"
+            (click)="activeTab = 'testcases'">
+            Test Cases
+          </button>
+          <button
+            [ngClass]="{ 'border-blue-500 text-blue-600': activeTab === 'activity', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'activity' }"
+            class="py-3 px-6 border-b-2 font-medium text-sm transition-colors"
+            (click)="activeTab = 'activity'">
+            Activity
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="flex-1 overflow-y-auto">
+
+          <!-- Test Cases Tab -->
+          @if (activeTab === 'testcases') {
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Test Cases</h3>
+                <span class="text-sm text-gray-500">{{ getTestCasesForRequirement().length }} test cases</span>
+              </div>
+
+              <!-- Test Cases List -->
+              <div class="space-y-3">
+                @for (testCase of getTestCasesForRequirement(); track testCase.id) {
+                  <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors cursor-pointer">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1">
+                        <h4 class="font-medium text-gray-900 text-sm mb-1">{{ testCase.title }}</h4>
+                        <p class="text-xs text-gray-600 mb-2">{{ testCase.description }}</p>
+                        <div class="flex items-center space-x-2">
+                              <span [ngClass]="getTestCaseStatusClasses(testCase.status)"
+                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium">
+                                {{ getStatusLabel(testCase.status) }}
+                              </span>
+                          @if (testCase.testResult) {
+                            <span [ngClass]="getTestResultClasses(testCase.testResult)"
+                                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium">
+                                  {{ testCase.testResult }}
+                                </span>
+                          }
+                        </div>
+                      </div>
+                      <div class="ml-3">
+                        <div
+                          class="w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                          <span class="text-white text-xs font-medium">{{ getUserInitials(testCase.createdBy) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="text-center py-8">
+                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="text-gray-500 text-sm">No test cases found for this requirement.</p>
+                    <button class="mt-3 text-blue-600 text-sm font-medium hover:text-blue-700">
+                      Create Test Case
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Activity Tab -->
+          @if (activeTab === 'activity') {
+            <div class="p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Activity</h3>
+
+              <!-- Activity Timeline -->
+              <div class="space-y-4">
+                <div class="flex items-start space-x-3">
+                  <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span class="text-white text-xs font-medium">AB</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-900">
+                      <span class="font-medium">Adrian Bert</span> created this requirement
+                    </p>
+                    <p class="text-xs text-gray-500">{{ formatDate(requirement.createdAt) }}</p>
+                  </div>
+                </div>
+
+                <div class="flex items-start space-x-3">
+                  <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                    <span class="text-white text-xs font-medium">AB</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-900">
+                      <span class="font-medium">Adrian Bert</span> updated the status to
+                      <span [ngClass]="getStatusClasses(requirement.status)"
+                            class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ml-1">
+                            {{ getStatusLabel(requirement.status) }}
+                          </span>
+                    </p>
+                    <p class="text-xs text-gray-500">{{ formatDate(requirement.updatedAt) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
