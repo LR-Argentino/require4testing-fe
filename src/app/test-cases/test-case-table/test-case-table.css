@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+.max-w-xs {
+  max-width: 20rem;
+}
