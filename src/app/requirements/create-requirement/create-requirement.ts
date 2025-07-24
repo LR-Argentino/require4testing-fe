@@ -1,5 +1,7 @@
-import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {RequirementService} from '../../../core/services/requirement-service';
+import {CreateRequirementDto} from '../../../shared/models/create-requirement-dto';
 
 
 @Component({
@@ -12,11 +14,13 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 })
 export class CreateRequirement {
   @Input() isVisible = false;
-  @Input() requirements: CreateRequirement[] = [];
+  @Input() requirements: CreateRequirementDto[] = [];
   @Output() close = new EventEmitter<void>();
 
-  form: FormGroup;
-  isSubmitting = false;
+  private readonly requirementService = inject(RequirementService);
+
+  protected form: FormGroup;
+  protected isSubmitting = false;
 
   constructor(private fb: FormBuilder) {
     this.form = this.createForm();
@@ -33,7 +37,6 @@ export class CreateRequirement {
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
       priority: [''],
-      requirementId: ['']
     });
   }
 
@@ -42,8 +45,13 @@ export class CreateRequirement {
       this.isSubmitting = true;
       const formValue = this.form.value;
 
-      // Simulate API call delay
       setTimeout(() => {
+        const requirement: CreateRequirementDto = {
+          title: formValue.title,
+          description: formValue.description,
+          priority: formValue.priority
+        }
+        this.requirementService.createRequirement(requirement);
         this.isSubmitting = false;
         this.onClose();
       }, 500);

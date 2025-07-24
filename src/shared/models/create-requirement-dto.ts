@@ -1,6 +1,6 @@
 import {Priority} from '../enums/priority';
 
-export interface CreateRequirement {
+export interface CreateRequirementDto {
   readonly title: string;
   readonly description: string;
   readonly priority: Priority;
