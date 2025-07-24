@@ -1,38 +1,40 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {Requirement} from '../../../shared/models/requirement';
 import {Priority} from '../../../shared/enums/priority';
 import {Status} from '../../../shared/enums/status';
 import {DatePipe, NgClass} from '@angular/common';
 import {RequirementDetail} from '../requirement-detail/requirement-detail';
 import {RequirementService} from '../../../core/services/requirement-service';
+import {RequirementUserBatchDto} from '../../../shared/models/requirement-user-batch-dto';
+import {CreateRequirement} from '../create-requirement/create-requirement';
 
 @Component({
   selector: 'app-requirement-table',
   imports: [
     NgClass,
     RequirementDetail,
-    DatePipe
+    DatePipe,
+    CreateRequirement
   ],
   templateUrl: './requirement-table.html',
   styleUrl: './requirement-table.css'
 })
 export class RequirementTable implements OnInit {
   protected readonly requirementService = inject(RequirementService);
+  protected modalVisible = false;
 
-  Priority = Priority;
-  Status = Status;
+  protected Priority = Priority;
+  protected Status = Status;
 
-  // Drawer state
-  isDrawerOpen = false;
-  selectedRequirement: Requirement | null = null;
-  
+  protected isDrawerOpen = false;
+  protected selectedRequirement: RequirementUserBatchDto | null = null;
+
 
   ngOnInit(): void {
     this.requirementService.getRequirements();
   }
 
 
-  openRequirementDrawer(requirement: Requirement): void {
+  openRequirementDrawer(requirement: RequirementUserBatchDto): void {
     this.selectedRequirement = requirement;
     this.isDrawerOpen = true;
   }
@@ -116,4 +118,7 @@ export class RequirementTable implements OnInit {
       .slice(0, 2);
   }
 
+  closeModal() {
+    this.modalVisible = false;
+  }
 }
