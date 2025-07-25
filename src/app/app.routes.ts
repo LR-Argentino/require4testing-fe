@@ -38,16 +38,17 @@ export const routes: Routes = [
         },
         canActivate: [authGurad]
       },
-      // {
-      //   path: 'test-cases',
-      //   loadComponent: () => import('./pages/test-cases/test-cases').then(m => m.TestCases),
-      //   data: {
-      //     meta: {
-      //       title: 'Test Cases',
-      //       description: 'Manage and organize your test cases'
-      //     }
-      //   }
-      // },
+      {
+        path: 'test-cases',
+        loadComponent: () => import('./test-cases/test-case-table/test-case-table').then(m => m.TestCaseTable),
+        data: {
+          meta: {
+            title: 'Test Cases',
+            description: 'Manage and organize your test cases'
+          }
+        },
+        canActivate: [authGurad]
+      },
       // {
       //   path: 'test-runs',
       //   loadComponent: () => import('./pages/test-runs/test-runs').then(m => m.TestRuns),

@@ -34,7 +34,6 @@ export class RequirementDetail {
       createdBy: 2,
       updatedAt: '2024-02-12',
       creationDate: '2024-02-01',
-      testRun: []
     },
     {
       id: 2,
@@ -46,7 +45,6 @@ export class RequirementDetail {
       createdBy: 3,
       updatedAt: '2024-02-10',
       creationDate: '2024-02-01',
-      testRun: []
     },
     {
       id: 3,
@@ -58,7 +56,6 @@ export class RequirementDetail {
       createdBy: 1,
       updatedAt: '2024-02-08',
       creationDate: '2024-02-01',
-      testRun: []
     },
     {
       id: 4,
@@ -70,7 +67,6 @@ export class RequirementDetail {
       createdBy: 4,
       updatedAt: '2024-02-11',
       creationDate: '2024-02-03',
-      testRun: []
     },
     {
       id: 5,
@@ -82,7 +78,6 @@ export class RequirementDetail {
       createdBy: 2,
       updatedAt: '2024-02-09',
       creationDate: '2024-02-03',
-      testRun: []
     }
   ];
 

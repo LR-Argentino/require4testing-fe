@@ -44,7 +44,6 @@ export class KanbanBoard {
     createdBy: 2,
     updatedAt: new Date().toISOString(),
     creationDate: new Date().toDateString(),
-    testRun: []
   };
 
   // Weitere Test Cases hinzufügen für bessere Demo
@@ -58,7 +57,6 @@ export class KanbanBoard {
     createdBy: 2,
     updatedAt: new Date().toISOString(),
     creationDate: new Date().toDateString(),
-    testRun: []
   };
 
   columns: KanbanColumn[] = [

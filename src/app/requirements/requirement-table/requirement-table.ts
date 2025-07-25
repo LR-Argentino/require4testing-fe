@@ -6,6 +6,14 @@ import {RequirementDetail} from '../requirement-detail/requirement-detail';
 import {RequirementService} from '../../../core/services/requirement-service';
 import {RequirementUserBatchDto} from '../../../shared/models/requirement-user-batch-dto';
 import {CreateRequirement} from '../create-requirement/create-requirement';
+import {
+  getPriorityClasses,
+  getPriorityLabel,
+  getStatusClasses,
+  getStatusColor,
+  getStatusLabel,
+  getUserInitials
+} from '../../../utils';
 
 @Component({
   selector: 'app-requirement-table',
@@ -47,4 +55,11 @@ export class RequirementTable implements OnInit {
   closeModal() {
     this.modalVisible = false;
   }
+
+  protected readonly getUserInitials = getUserInitials;
+  protected readonly getStatusLabel = getStatusLabel;
+  protected readonly getStatusClasses = getStatusClasses;
+  protected readonly getPriorityLabel = getPriorityLabel;
+  protected readonly getPriorityClasses = getPriorityClasses;
+  protected readonly getStatusColor = getStatusColor;
 }
