@@ -49,16 +49,17 @@ export const routes: Routes = [
         },
         canActivate: [authGurad]
       },
-      // {
-      //   path: 'test-runs',
-      //   loadComponent: () => import('./pages/test-runs/test-runs').then(m => m.TestRuns),
-      //   data: {
-      //     meta: {
-      //       title: 'Test Runs',
-      //       description: 'Execute and monitor test runs'
-      //     }
-      //   }
-      // },
+      {
+        path: 'test-runs',
+        loadComponent: () => import('./test-runs/test-run-table/test-run-table').then(m => m.TestRunTable),
+        data: {
+          meta: {
+            title: 'Test Runs',
+            description: 'Execute and monitor test runs'
+          }
+        },
+        canActivate: [authGurad]
+      },
       {
         path: 'requirements',
         loadComponent: () => import('./requirements/requirement-table/requirement-table').then(m => m.RequirementTable),
