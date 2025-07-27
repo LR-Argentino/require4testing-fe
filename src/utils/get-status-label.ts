@@ -5,7 +5,7 @@ export function getStatusLabel(status: Status): string {
     case Status.OPEN:
       return 'Open';
     case Status.IN_PROGRESS:
-      return 'In Research';
+      return 'In Progress';
     case Status.CLOSED:
       return 'Closed';
     default:
