@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {RequirementService} from '../../../core/services/requirement-service';
 import {TestCase} from '../../../shared/models/test-case';
 import {CreateTestCaseDto} from '../../../shared/models/create-test-case-dto';
+import {TestCaseService} from '../../../core/services/test-case-service';
 
 @Component({
   selector: 'app-create-test-case',
@@ -19,6 +20,8 @@ export class CreateTestCase implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   protected readonly requirementService = inject(RequirementService);
+  protected readonly testCaseService = inject(TestCaseService);
+
   private readonly fb = inject(FormBuilder);
 
 
@@ -44,11 +47,14 @@ export class CreateTestCase implements OnInit {
       this.isSubmitting = true;
       const formValue = this.form.value;
       setTimeout(() => {
-        const testCases: CreateTestCaseDto = {
+        const testCase: CreateTestCaseDto = {
           title: formValue.title,
           description: formValue.description,
-          requirementId: formValue.requirementId
+          requirementId: Number(formValue.requirementId)
         }
+
+        this.testCaseService.createTestCase(testCase)
+        console.log(testCase);
         this.isSubmitting = false;
         this.onClose();
       }, 500);
@@ -60,13 +66,13 @@ export class CreateTestCase implements OnInit {
     }
   }
 
-  onClose() {
+  protected onClose() {
     this.form.reset();
     this.isSubmitting = false;
     this.close.emit();
   }
 
-  onBackdropClick(event: MouseEvent) {
+  protected onBackdropClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {
       this.onClose();
     }

@@ -1,6 +1,7 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TestCase} from '../../shared/models/test-case';
+import {CreateTestCaseDto} from '../../shared/models/create-test-case-dto';
 
 interface TestCaseState {
   testCases: TestCase[];
@@ -39,6 +40,23 @@ export class TestCaseService {
       },
       error: (error) => {
         this.setLoadingAndErrorStateTo(false, error.message || 'Failed to load test cases');
+      }
+    });
+  }
+
+  public createTestCase(testCase: CreateTestCaseDto): void {
+    this.setLoadingAndErrorStateTo(true);
+    this.http.post<TestCase>(this.BASE_URL, testCase).subscribe({
+      next: (createdTestCase) => {
+        this._state.update(state => ({
+          ...state,
+          testCases: [...state.testCases, createdTestCase],
+          loading: false,
+          error: null
+        }));
+      },
+      error: (error) => {
+        this.setLoadingAndErrorStateTo(false, error.message || 'Failed to create test case');
       }
     });
   }
