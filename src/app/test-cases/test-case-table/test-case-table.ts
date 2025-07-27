@@ -4,12 +4,14 @@ import {Status} from '../../../shared/enums/status';
 import {NgClass} from '@angular/common';
 import {TestCase} from '../../../shared/models/test-case';
 import {TestCaseService} from '../../../core/services/test-case-service';
-import {getPriorityClasses, getPriorityLabel, getStatusClasses, getStatusColor, getStatusLabel} from '../../../utils';
+import {getStatusClasses, getStatusColor, getStatusLabel} from '../../../utils';
+import {CreateTestCase} from '../create-test-case/create-test-case';
 
 @Component({
   selector: 'app-requirement-table',
   imports: [
     NgClass,
+    CreateTestCase,
 
   ],
   templateUrl: './test-case-table.html',
@@ -31,7 +33,6 @@ export class TestCaseTable implements OnInit {
 
 
   ngOnInit(): void {
-    // this.requirementService.getRequirements();
     this.testCaseService.getTestCases();
   }
 
@@ -40,20 +41,4 @@ export class TestCaseTable implements OnInit {
     this.selectedTestCase = testCase;
     this.isDrawerOpen = true;
   }
-
-  closeDrawer(): void {
-    this.isDrawerOpen = false;
-    this.selectedTestCase = null;
-  }
-
-
-  closeModal() {
-    this.modalVisible = false;
-  }
-
-  protected readonly getPriorityClasses = getPriorityClasses;
-  protected readonly getPriorityLabel = getPriorityLabel;
-  protected readonly getStatusLabel = getStatusLabel;
-  protected readonly getStatusClasses = getStatusClasses;
-  protected readonly getStatusColor = getStatusColor;
 }
