@@ -123,14 +123,8 @@
   </div>
 </div>
 
-<!-- Requirement Drawer -->
-<!--<app-requirement-detail-->
-<!--  [isOpen]="isDrawerOpen"-->
-<!--  [requirement]="selectedTestCase"-->
-<!--  (closeDrawerEvent)="closeDrawer()">-->
-<!--</app-requirement-detail>-->
+<app-create-test-case
+  [isVisible]="modalVisible"
+  (close)="modalVisible = false">
 
-<!--<app-create-requirement-->
-<!--  [isVisible]="modalVisible"-->
-<!--  (close)="closeModal()"-->
-<!--&gt;</app-create-requirement>-->
+</app-create-test-case>

@@ -16,6 +16,10 @@ import {getPriorityClasses, getPriorityLabel, getStatusClasses, getStatusColor, 
   styleUrl: './test-case-table.css'
 })
 export class TestCaseTable implements OnInit {
+  protected readonly getStatusLabel = getStatusLabel;
+  protected readonly getStatusClasses = getStatusClasses;
+  protected readonly getStatusColor = getStatusColor;
+
   protected readonly testCaseService = inject(TestCaseService);
   protected modalVisible = false;
 

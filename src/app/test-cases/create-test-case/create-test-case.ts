@@ -1,33 +1,40 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, EventEmitter, inject, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {RequirementService} from '../../../core/services/requirement-service';
-import {CreateRequirementDto} from '../../../shared/models/create-requirement-dto';
-
+import {TestCase} from '../../../shared/models/test-case';
+import {CreateTestCaseDto} from '../../../shared/models/create-test-case-dto';
 
 @Component({
-  selector: 'app-create-requirement',
+  selector: 'app-create-test-case',
   imports: [
+    FormsModule,
     ReactiveFormsModule
   ],
-  templateUrl: './create-requirement.html',
-  styleUrl: './create-requirement.css'
+  templateUrl: './create-test-case.html',
+  styleUrl: './create-test-case.css'
 })
-export class CreateRequirement {
-  @Input() isVisible = false;
-  @Input() requirements: CreateRequirementDto[] = [];
-  @Output() close = new EventEmitter<void>();
-
-  private readonly requirementService = inject(RequirementService);
+export class CreateTestCase implements OnInit {
+  protected readonly requirementService = inject(RequirementService);
   private readonly fb = inject(FormBuilder);
+
+  @Input() isVisible = false;
+  @Input() testCases: TestCase[] = [];
+  @Input() close = new EventEmitter();
 
   protected form: FormGroup = this.createForm();
   protected isSubmitting = false;
+
+  ngOnInit(): void {
+    this.requirementService.getRequirements()
+    this.requirementService.notClosedRequirements();
+
+  }
 
   private createForm(): FormGroup {
     return this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
-      priority: [''],
+      requirementId: ['', Validators.required],
     });
   }
 
@@ -35,14 +42,15 @@ export class CreateRequirement {
     if (this.form.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       const formValue = this.form.value;
-
+      console.log('CreateTestCase initialized');
+      console.log(this.requirementService.getRequirements())
+      console.log(this.requirementService.notClosedRequirements());
       setTimeout(() => {
-        const requirement: CreateRequirementDto = {
+        const testCases: CreateTestCaseDto = {
           title: formValue.title,
           description: formValue.description,
-          priority: formValue.priority
+          requirementId: formValue.requirementId
         }
-        this.requirementService.createRequirement(requirement);
         this.isSubmitting = false;
         this.onClose();
       }, 500);

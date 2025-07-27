@@ -6,6 +6,7 @@ import {RequirementUserBatchDto} from '../../shared/models/requirement-user-batc
 import {catchError, finalize, map, Observable, of, switchMap} from 'rxjs';
 import {CreateRequirementDto} from '../../shared/models/create-requirement-dto';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Status} from '../../shared/enums/status';
 
 interface RequirementState {
   error: string | null;
@@ -31,6 +32,7 @@ export class RequirementService {
   });
 
   public readonly requirements = computed(() => this._state().requirements);
+  public readonly notClosedRequirements = computed(() => this._state().requirements.filter(req => req.status !== Status.CLOSED));
 
   constructor() {
   }
