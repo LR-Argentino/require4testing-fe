@@ -1,5 +1,4 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {Priority} from '../../../shared/enums/priority';
 import {Status} from '../../../shared/enums/status';
 import {NgClass} from '@angular/common';
 import {TestCase} from '../../../shared/models/test-case';
@@ -13,6 +12,7 @@ import {CreateTestCase} from '../create-test-case/create-test-case';
     NgClass,
     CreateTestCase,
 
+
   ],
   templateUrl: './test-case-table.html',
   styleUrl: './test-case-table.css'
@@ -23,9 +23,8 @@ export class TestCaseTable implements OnInit {
   protected readonly getStatusColor = getStatusColor;
 
   protected readonly testCaseService = inject(TestCaseService);
-  protected modalVisible = false;
+  protected modalVisible = false
 
-  protected Priority = Priority;
   protected Status = Status;
 
   protected isDrawerOpen = false;
@@ -37,8 +36,17 @@ export class TestCaseTable implements OnInit {
   }
 
 
-  openRequirementDrawer(testCase: TestCase): void {
+  openTestCaseDrawer(testCase: TestCase): void {
     this.selectedTestCase = testCase;
     this.isDrawerOpen = true;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerOpen = false;
+    this.selectedTestCase = null;
+  }
+
+  closeModal() {
+    this.modalVisible = false;
   }
 }

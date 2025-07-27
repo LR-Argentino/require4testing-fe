@@ -60,7 +60,7 @@
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
         @for (testCase of testCaseService.testCases(); track testCase.id) {
-          <tr class="hover:bg-gray-50 transition-colors cursor-pointer" (click)="openRequirementDrawer(testCase)">
+          <tr class="hover:bg-gray-50 transition-colors cursor-pointer" (click)="openTestCaseDrawer(testCase)">
             <!-- Title -->
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
@@ -125,6 +125,5 @@
 
 <app-create-test-case
   [isVisible]="modalVisible"
-  (close)="modalVisible = false">
-
+  (close)="closeModal()">
 </app-create-test-case>

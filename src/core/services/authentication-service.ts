@@ -92,7 +92,6 @@ export class AuthenticationService {
           if (!response) {
             console.error('Navigation failed after login');
           }
-          console.log(response);
         })
       },
       error: (err) => {

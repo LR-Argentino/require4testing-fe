@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {RequirementService} from '../../../core/services/requirement-service';
 import {TestCase} from '../../../shared/models/test-case';
@@ -14,12 +14,13 @@ import {CreateTestCaseDto} from '../../../shared/models/create-test-case-dto';
   styleUrl: './create-test-case.css'
 })
 export class CreateTestCase implements OnInit {
+  @Input() isVisible = false;
+  @Input() testCases: TestCase[] = [];
+  @Output() close = new EventEmitter<void>();
+
   protected readonly requirementService = inject(RequirementService);
   private readonly fb = inject(FormBuilder);
 
-  @Input() isVisible = false;
-  @Input() testCases: TestCase[] = [];
-  @Input() close = new EventEmitter();
 
   protected form: FormGroup = this.createForm();
   protected isSubmitting = false;
@@ -42,9 +43,6 @@ export class CreateTestCase implements OnInit {
     if (this.form.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       const formValue = this.form.value;
-      console.log('CreateTestCase initialized');
-      console.log(this.requirementService.getRequirements())
-      console.log(this.requirementService.notClosedRequirements());
       setTimeout(() => {
         const testCases: CreateTestCaseDto = {
           title: formValue.title,

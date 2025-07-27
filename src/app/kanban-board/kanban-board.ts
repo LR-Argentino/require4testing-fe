@@ -86,17 +86,12 @@ export class KanbanBoard {
   // TODO: https://dribbble.com/shots/25080871-Task-Management-Saas-Web-App-Board-Task
 
   drop(event: CdkDragDrop<TestCase[]>) {
-    console.log('Drop event triggered:', event); // Debug Log
-
     if (event.previousContainer === event.container) {
       // Reorder within same column
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      console.log('Moved within same column');
     } else {
       // Move between columns
       const task = event.previousContainer.data[event.previousIndex];
-      console.log('Moving task between columns:', task);
-
       // Update task status based on target column
       const targetColumnId = event.container.id;
       switch (targetColumnId) {
@@ -120,8 +115,6 @@ export class KanbanBoard {
         event.previousIndex,
         event.currentIndex
       );
-
-      console.log('Task moved and status updated to:', task.status);
     }
   }
 }

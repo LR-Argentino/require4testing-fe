@@ -57,7 +57,6 @@ export class RequirementService {
           requirements: requirementsWithUser,
           error: null
         }));
-        console.log('Requirements loaded:', requirementsWithUser);
       }
     });
   }
@@ -87,8 +86,6 @@ export class RequirementService {
             requirements: [...state.requirements, newRequirement],
             error: null
           }));
-
-          console.log('Requirement created and added:', newRequirement);
         }
       }
     });

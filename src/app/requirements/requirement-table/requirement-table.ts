@@ -27,6 +27,13 @@ import {
   styleUrl: './requirement-table.css'
 })
 export class RequirementTable implements OnInit {
+  protected readonly getUserInitials = getUserInitials;
+  protected readonly getStatusLabel = getStatusLabel;
+  protected readonly getStatusClasses = getStatusClasses;
+  protected readonly getPriorityLabel = getPriorityLabel;
+  protected readonly getPriorityClasses = getPriorityClasses;
+  protected readonly getStatusColor = getStatusColor;
+  
   protected readonly requirementService = inject(RequirementService);
   protected modalVisible = false;
 
@@ -56,10 +63,5 @@ export class RequirementTable implements OnInit {
     this.modalVisible = false;
   }
 
-  protected readonly getUserInitials = getUserInitials;
-  protected readonly getStatusLabel = getStatusLabel;
-  protected readonly getStatusClasses = getStatusClasses;
-  protected readonly getPriorityLabel = getPriorityLabel;
-  protected readonly getPriorityClasses = getPriorityClasses;
-  protected readonly getStatusColor = getStatusColor;
+
 }

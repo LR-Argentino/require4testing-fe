@@ -36,7 +36,6 @@ export class TestCaseService {
           loading: false,
           error: null
         }));
-        console.log('Test cases loaded:', testCases);
       },
       error: (error) => {
         this.setLoadingAndErrorStateTo(false, error.message || 'Failed to load test cases');
