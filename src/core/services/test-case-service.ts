@@ -2,6 +2,7 @@ import {computed, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TestCase} from '../../shared/models/test-case';
 import {CreateTestCaseDto} from '../../shared/models/create-test-case-dto';
+import {Status} from '../../shared/enums/status';
 
 interface TestCaseState {
   testCases: TestCase[];
@@ -23,6 +24,7 @@ export class TestCaseService {
   });
 
   public readonly testCases = computed(() => this._state().testCases);
+  public readonly openTestCases = computed(() => this._state().testCases.filter(testCase => testCase.status !== Status.CLOSED));
 
   constructor() {
   }

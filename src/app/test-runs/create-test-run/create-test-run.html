@@ -1,0 +1,120 @@
+@if (isVisible) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    (click)="onBackdropClick($event)"
+  >
+    <div
+      class="relative w-full max-w-md mx-4 bg-white rounded-xl shadow-2xl border border-gray-200 max-h-[90vh] overflow-y-auto"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Header -->
+      <div class="flex items-center justify-between p-6 border-b border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900">Create Test-Run</h2>
+        <button
+          type="button"
+          (click)="onClose()"
+          class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-6 space-y-4">
+        <!-- Title Field -->
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+            Titel *
+          </label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            [class.border-red-500]="form.get('title')?.invalid && form.get('title')?.touched"
+            placeholder="Titel eingeben..."
+          />
+          @if (form.get('title')?.invalid && form.get('title')?.touched) {
+            <div class="mt-1 text-sm text-red-600">
+              Titel ist erforderlich
+            </div>
+          }
+        </div>
+
+        <div>
+          <app-date-time-picker (dateRangeChange)="dateRange.set($event)"></app-date-time-picker>
+        </div>
+        <!-- Description Field -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+            Beschreibung
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="4"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+            [class.border-red-500]="form.get('description')?.invalid && form.get('description')?.touched"
+            placeholder="Beschreibung eingeben..."
+          ></textarea>
+        </div>
+
+        <!-- Priority Field (nur für Requirements) -->
+        <div>
+          <label for="priority" class="block text-sm font-medium text-gray-700 mb-2">
+            Priorität *
+          </label>
+          <select
+            id="priority"
+            formControlName="priority"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            [class.border-red-500]="form.get('priority')?.invalid && form.get('priority')?.touched"
+          >
+            <option value="">Priorität wählen...</option>
+            <option value="Low">Niedrig</option>
+            <option value="Medium">Mittel</option>
+            <option value="High">Hoch</option>
+          </select>
+          @if (form.get('priority')?.invalid && form.get('priority')?.touched) {
+            <div
+              class="mt-1 text-sm text-red-600">
+              Priorität ist erforderlich
+            </div>
+          }
+        </div>
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+          <button
+            type="button"
+            (click)="onClose()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            [disabled]="form.invalid || isSubmitting"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            @if (!isSubmitting) {
+              <span>Erstellen</span>
+            }
+            @if (isSubmitting) {
+              <span class="flex items-center">
+                <svg class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Wird gespeichert...
+              </span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+

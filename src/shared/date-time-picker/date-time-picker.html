@@ -1,0 +1,97 @@
+<div class="space-y-4">
+  <!-- Start Date/Time -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      Start Datum & Zeit
+    </label>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Start Date -->
+      <div class="relative">
+        <input
+          type="date"
+          [value]="startDateString()"
+          (change)="onStartDateChange($event)"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm   "
+          [class.border-red-500]="hasError() && !startDate()"
+        />
+      </div>
+
+      <!-- Start Time -->
+      <div class="relative">
+        <input
+          type="time"
+          [value]="startTimeString()"
+          (change)="onStartTimeChange($event)"
+          step="60"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm "
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- End Date/Time -->
+  <div class=" space-y-2">
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      End Datum & Zeit
+    </label>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- End Date -->
+      <div class="relative">
+        <input
+          type="date"
+          [value]="endDateString()"
+          (change)="onEndDateChange($event)"
+          [min]="startDateString()"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 "
+          [class.border-red-500]="hasError() && !endDate()"
+        />
+      </div>
+
+      <!-- End Time -->
+      <div class="relative">
+        <input
+          type="time"
+          [value]="endTimeString()"
+          (change)="onEndTimeChange($event)"
+          step="60"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Messages -->
+  @if (errorMessage()) {
+    <div class="text-sm text-red-600 dark:text-red-400">
+      {{ errorMessage() }}
+    </div>
+  }
+  @if (startDate() || endDate()) {
+    <!-- Preview -->
+    <div class="p-3 bg-gray-50 rounded-lg border border-b-gray-400">
+      <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Vorschau:</div>
+      <div class="space-y-1 text-sm">
+        @if (startDate()) {
+          <div>
+            <span class="font-medium">Start:</span>
+            {{ formatDateTime(startDate()!) }}
+          </div>
+        }
+
+        @if (endDate()) {
+          <div>
+            <span class="font-medium">Ende:</span>
+            {{ formatDateTime(endDate()!) }}
+          </div>
+        }
+
+        @if (duration()) {
+          <div class="text-blue-600 dark:text-blue-400">
+            <span class="font-medium">Dauer:</span>
+            {{ duration() }}
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
