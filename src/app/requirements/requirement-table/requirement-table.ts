@@ -14,6 +14,7 @@ import {
   getStatusLabel,
   getUserInitials
 } from '../../../utils';
+import {AuthenticationService} from '../../../core/services/authentication-service';
 
 @Component({
   selector: 'app-requirement-table',
@@ -33,8 +34,10 @@ export class RequirementTable implements OnInit {
   protected readonly getPriorityLabel = getPriorityLabel;
   protected readonly getPriorityClasses = getPriorityClasses;
   protected readonly getStatusColor = getStatusColor;
-  
+
   protected readonly requirementService = inject(RequirementService);
+  protected readonly authService = inject(AuthenticationService);
+
   protected modalVisible = false;
 
   protected Priority = Priority;

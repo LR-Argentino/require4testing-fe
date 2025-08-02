@@ -26,13 +26,15 @@
           </svg>
           Filter
         </button>
-        <!-- Add Test-Run -->
-        <button
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-          (click)="modalVisible = true"
-        >
-          Add Test-Run
-        </button>
+        @if (authService.isUserTestManager()) {
+          <!-- Add Test-Run -->
+          <button
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            (click)="modalVisible = true"
+          >
+            Add Test-Run
+          </button>
+        }
       </div>
     </div>
   </div>

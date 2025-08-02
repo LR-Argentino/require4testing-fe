@@ -26,12 +26,15 @@
           </svg>
           Filter
         </button>
-        <!-- Add Test Case -->
-        <button
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-          (click)="modalVisible = true">
-          Add Test Case
-        </button>
+        @if (authService.isUserTestCaseCreator()) {
+          <!-- Add Test Case -->
+          <button
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            (click)="modalVisible = true">
+            Add Test Case
+          </button>
+        }
+
       </div>
     </div>
   </div>

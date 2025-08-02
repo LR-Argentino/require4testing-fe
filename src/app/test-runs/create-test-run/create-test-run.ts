@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {TestCaseService} from '../../../core/services/test-case-service';
 import {TestRunService} from '../../../core/services/test-run-service';
 import {CreateTestRunDto} from '../../../shared/models/create-test-run-dto';
+import {UserService} from '../../../core/services/user-service';
 
 @Component({
   selector: 'app-create-test-run',
@@ -18,6 +19,7 @@ export class CreateTestRun {
   @Output() close = new EventEmitter<void>();
   private readonly testCaseService = inject(TestCaseService);
   private readonly testRunService = inject(TestRunService);
+  protected readonly userService = inject(UserService);
   private readonly fb = inject(FormBuilder);
   protected isSubmitting = false;
 
@@ -30,6 +32,7 @@ export class CreateTestRun {
       description: [''],
       startDate: [''],
       endDate: [''],
+      user: [],
       testCaseIds: []
     });
   }
@@ -40,6 +43,7 @@ export class CreateTestRun {
   constructor() {
     effect(() => {
       this.testCaseService.getTestCases();
+      this.userService.getUsers()
     });
   }
 
@@ -67,8 +71,8 @@ export class CreateTestRun {
           endDate: formValue.endDate,
           testCaseIds: this.selectedTestCaseIds()
         }
-        console.log(newTestRun)
-        this.testRunService.createTestRun(newTestRun);
+        console.log(newTestRun + "user " + formValue.user);
+        this.testRunService.createTestRun(newTestRun, formValue.user);
         this.isSubmitting = false;
         this.onClose();
       }, 500);

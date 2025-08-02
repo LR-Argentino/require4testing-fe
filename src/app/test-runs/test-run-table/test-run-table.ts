@@ -4,6 +4,7 @@ import {TestCaseService} from '../../../core/services/test-case-service';
 import {DatePipe} from '@angular/common';
 import {TestRunStatus} from '../../../shared/enums/test-run-status';
 import {CreateTestRun} from '../create-test-run/create-test-run';
+import {AuthenticationService} from '../../../core/services/authentication-service';
 
 @Component({
   selector: 'app-test-run-table',
@@ -17,6 +18,8 @@ import {CreateTestRun} from '../create-test-run/create-test-run';
 export class TestRunTable implements OnInit {
   protected readonly testRunService = inject(TestRunService);
   private readonly testCaseService = inject(TestCaseService);
+  protected readonly authService = inject(AuthenticationService);
+  
   protected modalVisible = false;
   protected readonly TestRunStatus = TestRunStatus;
 

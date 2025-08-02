@@ -5,6 +5,7 @@ import {TestCase} from '../../../shared/models/test-case';
 import {TestCaseService} from '../../../core/services/test-case-service';
 import {getStatusClasses, getStatusColor, getStatusLabel} from '../../../utils';
 import {CreateTestCase} from '../create-test-case/create-test-case';
+import {AuthenticationService} from '../../../core/services/authentication-service';
 
 @Component({
   selector: 'app-requirement-table',
@@ -23,6 +24,8 @@ export class TestCaseTable implements OnInit {
   protected readonly getStatusColor = getStatusColor;
 
   protected readonly testCaseService = inject(TestCaseService);
+  protected readonly authService = inject(AuthenticationService);
+
   protected modalVisible = false
 
   protected Status = Status;

@@ -4,10 +4,12 @@ import {LoginRequest} from '../../shared/models/login-request';
 import {LoginResponse} from '../../shared/models/login-response';
 import {User} from '../../shared/models/user';
 import {Router} from '@angular/router';
+import {Role} from '../../shared/enums/role';
 
 interface AuthenticationState {
   token: string | null;
   user: User | null;
+  role: string | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -21,6 +23,7 @@ export class AuthenticationService {
 
   private readonly _state = signal<AuthenticationState>({
     token: null,
+    role: null,
     user: null,
     isLoading: false,
     error: null
@@ -28,8 +31,14 @@ export class AuthenticationService {
 
   public readonly token = computed(() => this._state().token);
   public readonly user = computed(() => this._state().user);
+  public readonly role = computed(() => this._state().role);
   public readonly isLoading = computed(() => this._state().isLoading);
   public readonly error = computed(() => this._state().error);
+
+  public readonly isUserRequirementEngineer = computed<boolean>(() => this.role() === Role.REQUIREMENTS_ENGINEER);
+  public readonly isUserTester = computed<boolean>(() => this.role() === Role.TESTER);
+  public readonly isUserTestCaseCreator = computed<boolean>(() => this.role() === Role.TEST_CASE_CREATOR);
+  public readonly isUserTestManager = computed<boolean>(() => this.role() === Role.TEST_MANAGER);
 
   public readonly isAuthenticated = computed(() => {
     return this.token() !== null && this.user() !== null;
@@ -82,6 +91,7 @@ export class AuthenticationService {
           ...state,
           user: user,
           token: response.token,
+          role: response.roles[0],
           isLoading: false,
           error: null
         }));
@@ -130,6 +140,7 @@ export class AuthenticationService {
       ...state,
       token: null,
       user: null,
+      role: null,
       isLoading: false,
       error: null
     }));

@@ -34,9 +34,18 @@
         <p class="font-medium text-sm">{{ getCurrentUser() }}</p>
         <p class="text-blue-500 text-xs">Administrator</p>
       </div>
+
       <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
       </svg>
+    </div>
+    <div class="flex items-center space-x-3 p-3 rounded-lg   transition-colors cursor-pointer">
+      <button
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        (click)="userService.signout()"
+      >
+        Sign out
+      </button>
     </div>
   </div>
 </aside>

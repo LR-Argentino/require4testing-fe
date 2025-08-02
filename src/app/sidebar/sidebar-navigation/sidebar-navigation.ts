@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {SidebarItem} from '../sidebar-item/sidebar-item';
 import {RouterLink} from '@angular/router';
+import {UserService} from '../../../core/services/user-service';
 
 export interface NavigationItem {
   id: string;
@@ -20,6 +21,7 @@ export interface NavigationItem {
   styleUrl: './sidebar-navigation.css'
 })
 export class SidebarNavigation {
+  protected readonly userService = inject(UserService);
   protected navigationItems: NavigationItem[] = [
     {
       id: 'dashboard',
@@ -40,16 +42,16 @@ export class SidebarNavigation {
       icon: 'play'
     },
     {
-      id: 'kanban',
-      label: 'Kanban Board',
-      route: '/board',
-      icon: 'squares-2x2'
-    },
-    {
       id: 'requirements',
       label: 'Requirements',
       route: '/requirements',
       icon: 'document-text'
+    },
+    {
+      id: 'kanban',
+      label: 'Kanban Board',
+      route: '/board',
+      icon: 'squares-2x2'
     }
   ];
 

@@ -92,9 +92,9 @@ export class TestRunService {
     });
   }
 
-  public createTestRun(testRunDto: CreateTestRunDto): void {
+  public createTestRun(testRunDto: CreateTestRunDto, userId: number): void {
     this.setLoadingAndErrorStateTo(true);
-    this.http.post<TestRun>(this.BASE_URL, testRunDto).pipe(
+    this.http.post<TestRun>(`${this.BASE_URL}/${userId}`, testRunDto).pipe(
       catchError(error => {
         this.setLoadingAndErrorStateTo(false, error.message || 'Failed to create test run');
         return of(null);
