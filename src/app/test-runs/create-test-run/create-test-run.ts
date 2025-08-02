@@ -1,54 +1,74 @@
-import {Component, EventEmitter, inject, Input, Output, signal} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CreateRequirementDto} from '../../../shared/models/create-requirement-dto';
+import {Component, effect, EventEmitter, inject, Input, Output, signal} from '@angular/core';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {TestCaseService} from '../../../core/services/test-case-service';
 import {TestRunService} from '../../../core/services/test-run-service';
-import {DateTimePicker, DateTimeRange} from '../../../shared/date-time-picker/date-time-picker';
+import {CreateTestRunDto} from '../../../shared/models/create-test-run-dto';
 
 @Component({
   selector: 'app-create-test-run',
   imports: [
     ReactiveFormsModule,
-    DateTimePicker
+    FormsModule
   ],
   templateUrl: './create-test-run.html',
   styleUrl: './create-test-run.css'
 })
 export class CreateTestRun {
   @Input() isVisible = false;
-  @Input() requirements: CreateRequirementDto[] = [];
   @Output() close = new EventEmitter<void>();
+  private readonly testCaseService = inject(TestCaseService);
   private readonly testRunService = inject(TestRunService);
   private readonly fb = inject(FormBuilder);
-  protected dateRange = signal<DateTimeRange | null>(null);
+  protected isSubmitting = false;
+
 
   protected form: FormGroup = this.createForm();
-  protected isSubmitting = false;
 
   private createForm(): FormGroup {
     return this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
-      priority: [''],
+      startDate: [''],
+      endDate: [''],
+      testCaseIds: []
     });
   }
 
-  onSubmit() {
+  selectedTestCaseIds = signal<number[]>([]);
+  openTestCases = this.testCaseService.openTestCases;
+
+  constructor() {
+    effect(() => {
+      this.testCaseService.getTestCases();
+    });
+  }
+
+  protected toggleTestCase(id: number) {
+    const current = this.selectedTestCaseIds();
+    console.log(id);
+    if (current.includes(id)) {
+      this.selectedTestCaseIds.set(current.filter(cid => cid !== id));
+    } else {
+      this.selectedTestCaseIds.set([...current, id]);
+    }
+  }
+
+  protected onSubmit() {
     if (this.form.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       const formValue = this.form.value;
+      console.log(formValue);
 
       setTimeout(() => {
-        const requirement: CreateRequirementDto = {
+        const newTestRun: CreateTestRunDto = {
           title: formValue.title,
           description: formValue.description,
-          priority: formValue.priority
+          startDate: formValue.startDate,
+          endDate: formValue.endDate,
+          testCaseIds: this.selectedTestCaseIds()
         }
-        const range = this.dateRange();
-        if (range?.startDate && range?.endDate) {
-          console.log('Saving:', range);
-          // Service call hier
-        }
-        // this.testRunService.createTestRun()
+        console.log(newTestRun)
+        this.testRunService.createTestRun(newTestRun);
         this.isSubmitting = false;
         this.onClose();
       }, 500);
@@ -59,16 +79,17 @@ export class CreateTestRun {
       });
     }
   }
-  
-  onClose() {
+
+  protected onClose() {
     this.form.reset();
     this.isSubmitting = false;
     this.close.emit();
   }
 
-  onBackdropClick(event: MouseEvent) {
+  protected onBackdropClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {
       this.onClose();
     }
   }
+
 }
